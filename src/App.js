@@ -1,25 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {
+  Router,
+  Route
+} from 'react-router-dom'
+import Callback from './routes/Callback'
+import Home from './routes/Home'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import { createBrowserHistory } from 'history'
 
-export default App;
+const history = createBrowserHistory()
+
+const App = () => (
+  <Router history={history}>
+    <Route exact path="/" component={Home}/>
+    <Route exact path="/callback" component={Callback}/>
+  </Router>
+)
+
+export default App
