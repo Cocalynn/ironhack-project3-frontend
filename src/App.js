@@ -7,6 +7,7 @@ import AllCoursesPage from "./pages/AllCoursesPage";
 import CoursePage from "./pages/CoursePage";
 import LecturerPage from "./pages/LecturerPage";
 import NavBar from "./components/NavBar";
+import FooterBar from './components/FooterBar'
 
 import { createBrowserHistory } from "history";
 
@@ -22,7 +23,9 @@ const App = () => (
       <Route exact path="/courses/:courseId" component={CoursePage} />
       <Route exact path="/courses/newcourse" component={AddCoursePage} />
       <Route exact path="/lecturers/:lecturerId" component={LecturerPage} />
+      <FooterBar />
     </Router>
+
   </>
 );
 
