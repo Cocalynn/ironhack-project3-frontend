@@ -6,16 +6,20 @@
     "amazon-cognito-auth-js": "^1.3.2",
     "amazon-cognito-identity-js": "^3.0.14",
     "aws-sdk": "^2.498.0",
+    "axios": "^1.4.0",
+    "bootstrap": "^5.2.3",
     "react": "^16.8.6",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^16.8.6",
     "react-redux": "^7.1.0",
-    "react-router-dom": "^5.0.1",
+    "react-router-dom": "^5.3.4",
     "react-scripts": "3.0.1",
+    "react-select": "^5.7.3",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
