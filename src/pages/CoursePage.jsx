@@ -1,5 +1,6 @@
 import axios from "axios";
 import React from "react";
+import ReviewForm from "../components/ReviewForm";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -10,6 +11,16 @@ const API_URL = "http://localhost:5005";
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [lecturer, setLecturer] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
+  const toggleReviewForm = () => {
+    setShowReviewForm(!showReviewForm);
+  };
+
+  const isCourseCompleted =
+    course &&
+    (course.chapters.length === 0 ||
+      course.chapters.length === course.totalChapters);
 
   const { courseId } = useParams();
 
@@ -80,11 +91,31 @@ const CoursePage = () => {
                 </Card.Body>
                 <hr />
                 <Card.Body className="d-flex justify-content-between align-items-center bg-light">
-                  <Badge variant="success">Active account</Badge>
-                  <Button variant="outline-secondary" size="sm">
-                    Switch
-                  </Button>
+                  {/* Show review form only if the course is completed */}
+                  {isCourseCompleted ? (
+                    <>
+                      <Badge variant="success">Active account</Badge>
+                      <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={toggleReviewForm}
+                      >
+                        Leave a Review
+                      </Button>
+                    </>
+                  ) : (
+                    <span>Course needs to be completed to leave a review</span>
+                  )}
                 </Card.Body>
+                {/* Show review form if it's toggled on */}
+                {showReviewForm && (
+                  <Card.Body>
+                    <ReviewForm
+                      courseId={courseId}
+                      toggleReviewForm={toggleReviewForm}
+                    />
+                  </Card.Body>
+                )}
               </Card>
             </Col>
           )}
