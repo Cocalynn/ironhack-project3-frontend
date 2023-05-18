@@ -13,14 +13,15 @@ const mapStateToProps = state => {
 class Home extends Component {
   constructor (props) {
     super(props)
-    this.state = { apiStatus: 'Not called' }
+    this.state = { apiStatus: 'Not called', file: null, userProfilePic: null }
   }
 
   componentDidMount () {
     if (this.props.session.isLoggedIn) {
-      // Call the API server GET /users endpoint with our JWT access token
+      // Call the API server GET /auth endpoint with our JWT access token
+      // get user information from API server
       const option1 = {
-        url: `${appConfig.apiUri}/users`,
+        url: `${appConfig.apiUri}/auth`,
         headers: {
           Authorization: `Bearer ${this.props.session.credentials.accessToken}`
         }
@@ -45,51 +46,21 @@ class Home extends Component {
         this.setState({ apiStatus, apiResponse })
       })
 
-
-      // Call the API server GET /user endpoint with our JWT access token
-      const option2 = {
-        url: `${appConfig.apiUri}/user`,
+      const config = {
         headers: {
           Authorization: `Bearer ${this.props.session.credentials.accessToken}`
         }
       }
-      
-      request.get(option2, (err, resp, body) => {
-        let user, profileImage
-        if (err) {
-          // is API server started and reachable?
-          console.error('Unable to reach API: ' + err)
-        }
-        else if (resp.statusCode !== 200) {
-          // API returned an error
-          console.error('Error response received: ' + JSON.stringify(resp))
-        }
-        else {
-          user = body // user is a string
-          profileImage = JSON.parse(user).profileImage
-        }
-        this.setState({ user, profileImage })
-      })
+
+      axios.get(`${appConfig.apiUri}/user`, config)
+        .then((response) => {
+          this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
-
-  // getUser = (e) => {
-  //   e.preventDefault()
-  //   const [user, setUser] = useState(null)
-  //   axios.get(`${appConfig.apiUri}/user`)
-  //     .then((response) => {
-  //       const currentUser = response.data
-  //       setUser(currentUser)
-  //       console.log(user)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //     })
-  // }
-
-  // useEffect(() => {
-  //   getUser()
-  // }, []);
 
   onSignOut = (e) => {
     e.preventDefault()
@@ -100,8 +71,28 @@ class Home extends Component {
     console.log('changeNickname')
   }
 
+  handleFileChange = (e) => {
+    this.setState({ file: e.target.files[0] })
+  }
+
   uploadProfilePicture = (e) => {
-    console.log('uploadProfilePicture')
+    const formData = new FormData()
+    formData.append('profilePic', this.state.file)
+    const config = {
+      headers: { 
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${this.props.session.credentials.accessToken}` 
+      }
+    };
+    axios.post(`${appConfig.apiUri}/upload-image`, formData, config)
+      .then((response) => {
+        console.log(response)
+        this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
   }
 
   render () {
@@ -111,10 +102,17 @@ class Home extends Component {
           { this.props.session.isLoggedIn ? (
             <div>
               <p>Welcome! {this.props.session.user.userName}</p>
-              <img src={this.state.profileImage}/>
+              <img src={this.state.userProfilePic}/>
               <p>{this.props.session.user.email}</p>
               <button onClick={this.changeNickname}>Change my nickname</button>
-              <button onClick={this.uploadProfilePicture}>Upload profile picture</button>
+
+
+              <div>
+                <input type="file" onChange={this.handleFileChange}/>
+                <button onClick={this.uploadProfilePicture}>Upload profile picture</button>
+              </div>
+
+
               <hr></hr>
               <div>
                 <div>API status: {this.state.apiStatus}</div>
