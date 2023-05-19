@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import cognitoUtils from '../lib/cognitoUtils'
 import request from 'request'
@@ -13,7 +12,7 @@ const mapStateToProps = state => {
 class Home extends Component {
   constructor (props) {
     super(props)
-    this.state = { apiStatus: 'Not called', file: null, userProfilePic: null }
+    this.state = { apiStatus: 'Not called', file: null, userProfilePic: null, nickname: null, newNickName:"" }
   }
 
   componentDidMount () {
@@ -55,6 +54,8 @@ class Home extends Component {
       axios.get(`${appConfig.apiUri}/user`, config)
         .then((response) => {
           this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
+          console.log(response.data)
+          this.setState({ nickname: response.data.nickname })
         })
         .catch((error) => {
           console.log(error)
@@ -67,9 +68,28 @@ class Home extends Component {
     cognitoUtils.signOutCognitoSession()
   }
 
-  changeNickname = (e) => {
-    console.log('changeNickname')
+
+  handleNicknameChange = (e) => {
+    this.setState({ newNickname: e.target.value })
   }
+
+  changeNickname = (e) => {
+    e.preventDefault();
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this.props.session.credentials.accessToken}`
+      }
+    }
+    axios.put(`${appConfig.apiUri}/user/change-nickname`, { nickname: this.state.newNickname }, config)
+      .then(response => {
+        console.log(response.data); // updated user
+        this.setState({ nickname: this.state.newNickname });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+  
 
   handleFileChange = (e) => {
     this.setState({ file: e.target.files[0] })
@@ -84,7 +104,7 @@ class Home extends Component {
         Authorization: `Bearer ${this.props.session.credentials.accessToken}` 
       }
     };
-    axios.post(`${appConfig.apiUri}/upload-image`, formData, config)
+    axios.post(`${appConfig.apiUri}/user/upload-image`, formData, config)
       .then((response) => {
         console.log(response)
         this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
@@ -101,10 +121,24 @@ class Home extends Component {
         <header className="Home-header">
           { this.props.session.isLoggedIn ? (
             <div>
-              <p>Welcome! {this.props.session.user.userName}</p>
+              {/* <p>Welcome! {this.props.session.user.userName}</p> */}
+              <p>Welcome! {this.state.nickname}</p>
               <img src={this.state.userProfilePic}/>
               <p>{this.props.session.user.email}</p>
-              <button onClick={this.changeNickname}>Change my nickname</button>
+
+
+              {/* <button onClick={this.changeNickname}>Change my nickname</button> */}
+              <form onSubmit={this.changeNickname}>
+                <label>
+                  New Nickname:
+                  <input 
+                    type="text" 
+                    value={this.state.newNickname} 
+                    onChange={this.handleNicknameChange} 
+                  />
+                </label>
+                <button type="submit">Submit</button>
+              </form>
 
 
               <div>
