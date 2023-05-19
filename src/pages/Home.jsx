@@ -27,6 +27,7 @@ class Home extends Component {
       }
 
       this.setState({ apiStatus: 'Loading...' })
+
       request.get(option1, (err, resp, body) => {
         let apiStatus, apiResponse
         if (err) {
@@ -122,12 +123,10 @@ class Home extends Component {
           { this.props.session.isLoggedIn ? (
             <div>
               {/* <p>Welcome! {this.props.session.user.userName}</p> */}
-              <p>Welcome! {this.state.nickname}</p>
+              <p>Welcome! {this.state.nickname ? this.state.nickname: this.props.session.user.userName}</p>
               <img src={this.state.userProfilePic}/>
               <p>{this.props.session.user.email}</p>
 
-
-              {/* <button onClick={this.changeNickname}>Change my nickname</button> */}
               <form onSubmit={this.changeNickname}>
                 <label>
                   New Nickname:
