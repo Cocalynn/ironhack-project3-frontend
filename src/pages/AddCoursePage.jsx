@@ -15,7 +15,7 @@ import formHeader from "../assets/images/form-header.png";
 import CreatableSelect from "react-select/creatable";
 import axios from "axios";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const AddCoursePage = () => {
   const navigate = useHistory();

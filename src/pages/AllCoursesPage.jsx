@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import CourseSearch from "../components/CourseSearch";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const AllCoursesPage = () => {
   const [courses, setCourses] = useState([]);

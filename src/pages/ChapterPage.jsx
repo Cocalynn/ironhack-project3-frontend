@@ -3,7 +3,7 @@ import axios from "axios";
 import VideoPlayer from "../components/VideoPlayer";
 import { useParams } from "react-router-dom";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const ChapterPage = () => {
   const { chapterId } = useParams();
