@@ -1,5 +1,6 @@
 import React from "react";
 import YouTube from "react-youtube";
+import { Button, Container } from "react-bootstrap";
 
 class VideoPlayer extends React.Component {
   constructor(props) {
@@ -37,22 +38,26 @@ class VideoPlayer extends React.Component {
       width: "640",
       playerVars: {
         // https://developers.google.com/youtube/player_parameters
-        autoplay: 1,
+        autoplay: 0,
       },
     };
 
     return (
-      <div>
-        <YouTube videoId={videos[currentVideoIndex]} opts={opts} />
-        {currentVideoIndex > 0 && (
-          <button onClick={this.handlePrevious}>Previous</button>
-        )}
-        {currentVideoIndex < videos.length - 1 ? (
-          <button onClick={this.handleNext}>Next</button>
-        ) : (
-          <button onClick={this.handleComplete}>Mark Course Complete</button>
-        )}
-      </div>
+      <Container className="d-flex flex-column align-items-center">
+        <div style={{ width: opts.width, display: "block", margin: "auto" }}>
+          <YouTube videoId={videos[currentVideoIndex]} opts={opts} />
+        </div>
+        <div className="mt-3">
+          {currentVideoIndex > 0 && (
+            <Button onClick={this.handlePrevious}>Previous</Button>
+          )}
+          {currentVideoIndex < videos.length - 1 ? (
+            <Button onClick={this.handleNext}>Next</Button>
+          ) : (
+            <Button onClick={this.handleComplete}>Mark Course Complete</Button>
+          )}
+        </div>
+      </Container>
     );
   }
 }

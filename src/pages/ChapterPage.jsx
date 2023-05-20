@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import VideoPlayer from "../components/VideoPlayer";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { Button, Container, Spinner } from "react-bootstrap";
+import { FiArrowLeftCircle } from "react-icons/fi";
 
 const API_URL = "http://localhost:5005";
 
@@ -21,19 +23,31 @@ const ChapterPage = () => {
   }, [chapterId]);
 
   if (!chapter) {
-    return <div>Loading...</div>;
+    return (
+      <Container className="d-flex justify-content-center py-5">
+        <Spinner animation="border" role="status" variant="warning">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
   }
 
-  // As you already have the video ID, you don't need to extract it anymore.
   let videoId = chapter.youtubeId;
 
   console.log("Video ID:", videoId);
 
   return (
-    <div>
-      <h1>{chapter.name}</h1>
+    <Container className="d-flex flex-column align-items-center py-3">
+      <Button
+        as={Link}
+        to={`/courses/${chapter.course}`}
+        className="mb-3 btn-sm"
+      >
+        <FiArrowLeftCircle /> Back to Course
+      </Button>
+      <h1 className="mb-4 text-center">{chapter.name}</h1>
       <VideoPlayer videos={[videoId]} />
-    </div>
+    </Container>
   );
 };
 
