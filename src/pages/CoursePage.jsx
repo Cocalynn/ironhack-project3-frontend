@@ -1,10 +1,12 @@
 import axios from "axios";
 import React from "react";
 import ReviewForm from "../components/ReviewForm";
+import CourseProgress from "../components/CourseProgress";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
+import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Card, Image, Row, Col, Button, Badge } from "react-bootstrap";
+import { Card, Image, Row, Col, Button } from "react-bootstrap";
 
 const API_URL = "http://localhost:5005";
 
@@ -55,6 +57,8 @@ const CoursePage = () => {
           <Row>
             <Col xs={12} lg={6}>
               <Card style={{ marginBottom: "15px" }}>
+                <Card.Img src={defaultCourseImg} />
+                <hr />
                 <Card.Body>
                   <Card.Title>
                     <h1>{course.name}</h1>
@@ -125,6 +129,9 @@ const CoursePage = () => {
                     </Card.Body>
                   )}
                 </Card>
+                <Row>
+                  <CourseProgress courseId={courseId} />
+                </Row>
               </Col>
             )}
           </Row>

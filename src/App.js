@@ -11,6 +11,7 @@ import FooterBar from "./components/FooterBar";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
 
+
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();

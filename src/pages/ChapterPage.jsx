@@ -24,19 +24,10 @@ const ChapterPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Helper function to extract YouTube video ID
-  const extractVideoId = (youtubeLink) => {
-    const regex = /[?&]v=([^&#]*)/i;
-    const match = youtubeLink.match(regex);
-    return match && match[1] ? match[1] : "";
-  };
+  // As you already have the video ID, you don't need to extract it anymore.
+  let videoId = chapter.youtubeId;
 
-  // extract YouTube video ID from chapter link
-  let videoId = "";
-  if (chapter.youtubeId) {
-    videoId = extractVideoId(chapter.youtubeId);
-  }
-  console.log("Extracted video ID:", videoId);
+  console.log("Video ID:", videoId);
 
   return (
     <div>
