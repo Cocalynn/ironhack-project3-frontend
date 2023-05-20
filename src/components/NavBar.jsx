@@ -24,12 +24,8 @@ const NavBar = () => {
         />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link eventKey="/">
-              Home
-            </Nav.Link>
-            <Nav.Link eventKey="/courses">
-              Courses
-            </Nav.Link>
+            <Nav.Link eventKey="/">Home</Nav.Link>
+            <Nav.Link eventKey="/courses">Courses</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item eventKey="/courses/newcourse">
                 Add New Course
