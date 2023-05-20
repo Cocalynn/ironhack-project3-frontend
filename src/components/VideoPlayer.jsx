@@ -1,7 +1,7 @@
 import React from "react";
 import YouTube from "react-youtube";
 
-class CoursePlayer extends React.Component {
+class VideoPlayer extends React.Component {
   constructor(props) {
     super(props);
     console.log("Videos:", props.videos);
@@ -57,4 +57,4 @@ class CoursePlayer extends React.Component {
   }
 }
 
-export default CoursePlayer;
+export default VideoPlayer;

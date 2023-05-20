@@ -11,7 +11,6 @@ import FooterBar from "./components/FooterBar";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
 
-
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
@@ -22,8 +21,8 @@ const App = () => (
       <NavBar />
       <Route exact path="/" component={Home} />
       <Route exact path="/callback" component={Callback} />
+      <Route exact path="/add-course" component={AddCoursePage} />
       <Route exact path="/courses" component={AllCoursesPage} />
-      <Route exact path="/courses/newcourse" component={AddCoursePage} />
       <Route exact path="/courses/:courseId" component={CoursePage} />
       <Route
         exact
