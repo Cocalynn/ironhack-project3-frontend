@@ -1,7 +1,7 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
-import Callback from "./routes/Callback";
-import Home from "./routes/Home";
+import Callback from "./pages/Callback";
+import Home from "./pages/Home";
 import AddCoursePage from "./pages/AddCoursePage";
 import AllCoursesPage from "./pages/AllCoursesPage";
 import CoursePage from "./pages/CoursePage";
