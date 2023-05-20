@@ -1,10 +1,12 @@
 import axios from "axios";
 import React from "react";
 import ReviewForm from "../components/ReviewForm";
+import CourseProgress from "../components/CourseProgress";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
+import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Card, Image, Row, Col, Button, Badge } from "react-bootstrap";
+import { Card, Image, Row, Col, Button } from "react-bootstrap";
 
 const API_URL = "http://localhost:3010";
 
@@ -71,6 +73,8 @@ const CoursePage = () => {
           <Row>
             <Col xs={12} lg={6}>
               <Card style={{ marginBottom: "15px" }}>
+                <Card.Img src={defaultCourseImg} />
+                <hr />
                 <Card.Body>
                   <Card.Title>
                     <h1>{course.name}</h1>
@@ -122,14 +126,11 @@ const CoursePage = () => {
                   <hr />
                   <Card.Body className="d-flex justify-content-between align-items-center bg-light">
                     {/* Show review form only if the course is completed */}
+                    <Button as={Link} to={`/courses/add-chapter/${courseId}`}>
+                      Add Chapter
+                    </Button>
                     {isCourseCompleted ? (
                       <>
-                        <Button
-                          as={Link}
-                          to={`/courses/add-chapter/${courseId}`}
-                        >
-                          Add Chapter
-                        </Button>
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -154,17 +155,21 @@ const CoursePage = () => {
                     </Card.Body>
                   )}
                 </Card>
+                <Row>
+                  <CourseProgress courseId={courseId} />
+                </Row>
               </Col>
             )}
           </Row>
           <Row>
             {course.chapters.map((chapter, index) => (
               <Card key={index} style={{ width: "18rem", margin: "10px" }}>
-                <Card.Body>
-                  <Card.Title>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="mb-auto">
                     Chapter {index + 1}: {chapter.name}
                   </Card.Title>
                   <Button
+                    size="sm"
                     as={Link}
                     to={`/courses/${courseId}/chapters/${chapter._id}`}
                   >

@@ -1,60 +1,70 @@
 import React from "react";
-import YouTube from "react-youtube";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import ReactPlayer from "react-player/youtube";
+import { SlArrowRightCircle, SlArrowLeftCircle } from "react-icons/sl";
 
-class CoursePlayer extends React.Component {
+class VideoPlayer extends React.Component {
   constructor(props) {
     super(props);
-    console.log("Videos:", props.videos);
+    console.log("Chapters:", props.chapters);
     this.state = {
-      currentVideoIndex: 0,
+      currentChapterIndex: props.currentChapterIndex || 0,
     };
   }
 
   handleNext = () => {
     this.setState((prevState) => ({
-      currentVideoIndex: prevState.currentVideoIndex + 1,
+      currentChapterIndex: prevState.currentChapterIndex + 1,
     }));
   };
 
   handlePrevious = () => {
     this.setState((prevState) => ({
-      currentVideoIndex: prevState.currentVideoIndex - 1,
+      currentChapterIndex: prevState.currentChapterIndex - 1,
     }));
   };
 
-  handleComplete = () => {
-    // Here you would handle course completion.
-    // This might involve updating the user's progress on the backend.
-    console.log("Course completed!");
-  };
-
   render() {
-    const { currentVideoIndex } = this.state;
-    const { videos } = this.props; // array of YouTube video IDs
-
-    const opts = {
-      height: "390",
-      width: "640",
-      playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        autoplay: 1,
-      },
-    };
+    const { currentChapterIndex } = this.state;
+    const { chapters } = this.props; // array of YouTube video IDs
 
     return (
-      <div>
-        <YouTube videoId={videos[currentVideoIndex]} opts={opts} />
-        {currentVideoIndex > 0 && (
-          <button onClick={this.handlePrevious}>Previous</button>
-        )}
-        {currentVideoIndex < videos.length - 1 ? (
-          <button onClick={this.handleNext}>Next</button>
-        ) : (
-          <button onClick={this.handleComplete}>Mark Course Complete</button>
-        )}
-      </div>
+      <Container>
+        <h1 className="mb-4 text-center">
+          {chapters[currentChapterIndex].name}
+        </h1>
+        <Row>
+          <Col lg={8} md={10} sm={12} className="mx-auto mb-4">
+            <div className="position-relative" style={{ paddingTop: "56.25%" }}>
+              <ReactPlayer
+                url={`https://www.youtube.com/watch?v=${chapters[currentChapterIndex].videoId}`}
+                style={{ position: "absolute", top: 0, left: 0 }}
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div className="d-flex justify-content-around mt-3">
+              {currentChapterIndex > 0 && (
+                <Button variant="warning" onClick={this.handlePrevious}>
+                  <SlArrowLeftCircle /> Previous
+                </Button>
+              )}
+              <Button onClick={this.handleMarkAsDone}>Mark Done</Button>
+              {currentChapterIndex < chapters.length - 1 && (
+                <Button variant="warning" onClick={this.handleNext}>
+                  Next <SlArrowRightCircle />
+                </Button>
+              )}
+            </div>
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }
 
-export default CoursePlayer;
+export default VideoPlayer;

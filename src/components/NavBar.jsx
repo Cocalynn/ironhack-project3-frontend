@@ -27,7 +27,7 @@ const NavBar = () => {
             <Nav.Link eventKey="/">Home</Nav.Link>
             <Nav.Link eventKey="/courses">Courses</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item eventKey="/courses/newcourse">
+              <NavDropdown.Item eventKey="/add-course">
                 Add New Course
               </NavDropdown.Item>
               <NavDropdown.Item eventKey="#another-action">
