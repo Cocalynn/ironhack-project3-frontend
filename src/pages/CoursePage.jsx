@@ -97,14 +97,11 @@ const CoursePage = () => {
                   <hr />
                   <Card.Body className="d-flex justify-content-between align-items-center bg-light">
                     {/* Show review form only if the course is completed */}
+                    <Button as={Link} to={`/courses/add-chapter/${courseId}`}>
+                      Add Chapter
+                    </Button>
                     {isCourseCompleted ? (
                       <>
-                        <Button
-                          as={Link}
-                          to={`/courses/add-chapter/${courseId}`}
-                        >
-                          Add Chapter
-                        </Button>
                         <Button
                           variant="outline-secondary"
                           size="sm"

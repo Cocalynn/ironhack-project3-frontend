@@ -1,37 +1,32 @@
 import React from "react";
 import YouTube from "react-youtube";
 import { Button, Container } from "react-bootstrap";
+import { SlArrowRightCircle, SlArrowLeftCircle } from "react-icons/sl";
 
 class VideoPlayer extends React.Component {
   constructor(props) {
     super(props);
-    console.log("Videos:", props.videos);
+    console.log("Chapters:", props.chapters);
     this.state = {
-      currentVideoIndex: 0,
+      currentChapterIndex: props.currentChapterIndex || 0,
     };
   }
 
   handleNext = () => {
     this.setState((prevState) => ({
-      currentVideoIndex: prevState.currentVideoIndex + 1,
+      currentChapterIndex: prevState.currentChapterIndex + 1,
     }));
   };
 
   handlePrevious = () => {
     this.setState((prevState) => ({
-      currentVideoIndex: prevState.currentVideoIndex - 1,
+      currentChapterIndex: prevState.currentChapterIndex - 1,
     }));
   };
 
-  handleComplete = () => {
-    // Here you would handle course completion.
-    // This might involve updating the user's progress on the backend.
-    console.log("Course completed!");
-  };
-
   render() {
-    const { currentVideoIndex } = this.state;
-    const { videos } = this.props; // array of YouTube video IDs
+    const { currentChapterIndex } = this.state;
+    const { chapters } = this.props; // array of YouTube video IDs
 
     const opts = {
       height: "390",
@@ -44,17 +39,26 @@ class VideoPlayer extends React.Component {
 
     return (
       <Container className="d-flex flex-column align-items-center">
+        <h1 className="mb-4 text-center">
+          {chapters[currentChapterIndex].name}
+        </h1>
         <div style={{ width: opts.width, display: "block", margin: "auto" }}>
-          <YouTube videoId={videos[currentVideoIndex]} opts={opts} />
+          <YouTube
+            videoId={chapters[currentChapterIndex].videoId}
+            opts={opts}
+          />
         </div>
-        <div className="mt-3">
-          {currentVideoIndex > 0 && (
-            <Button onClick={this.handlePrevious}>Previous</Button>
+        <div className="d-flex justify-content-around mt-3">
+          {currentChapterIndex > 0 && (
+            <Button variant="warning" onClick={this.handlePrevious}>
+              <SlArrowLeftCircle /> Previous
+            </Button>
           )}
-          {currentVideoIndex < videos.length - 1 ? (
-            <Button onClick={this.handleNext}>Next</Button>
-          ) : (
-            <Button onClick={this.handleComplete}>Mark Course Complete</Button>
+          <Button onClick={this.handleMarkAsDone}>Mark Done</Button>
+          {currentChapterIndex < chapters.length - 1 && (
+            <Button variant="warning" onClick={this.handleNext}>
+              Next <SlArrowRightCircle />
+            </Button>
           )}
         </div>
       </Container>
