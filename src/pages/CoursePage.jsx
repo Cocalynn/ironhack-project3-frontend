@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, Image, Row, Col, Button } from "react-bootstrap";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
@@ -50,6 +50,22 @@ const CoursePage = () => {
 
   console.log(lecturer);
 
+  // Checkout
+  const checkout = () => {
+    axios
+      .post(`${API_URL}/api/checkout`, { courseId }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => {
+        console.log(response.data);
+        window.location.href = response.data.url
+      })
+      .catch((error) => console.log(error));
+  };
+
+
   return (
     <div className="container">
       {course && (
@@ -68,8 +84,21 @@ const CoursePage = () => {
                       <span>{course.description}</span>
                     </>
                   </Card.Text>
+                  <Card.Text>
+                    <span>
+                      <Badge variant="primary">${course.price}</Badge>
+                    </span>
+                  </Card.Text>
                 </Card.Body>
               </Card>
+              <div>
+                  <Button variant="primary" type="submit" onClick={checkout}>
+                    Checkout
+                  </Button>
+
+
+                <Button variant="warning">Add to Wishlist</Button>
+              </div>
             </Col>
 
             {lecturer && (

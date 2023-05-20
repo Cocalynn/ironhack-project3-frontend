@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const AddChapterForm = () => {
   const { courseId } = useParams();

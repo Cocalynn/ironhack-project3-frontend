@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import axios from "axios";
 
-const API_URL = 'http://localhost:5005'
+const API_URL = 'http://localhost:3010'
 
 const ReviewForm = ({ courseId, toggleReviewForm }) => {
   const [rating, setRating] = useState(0);

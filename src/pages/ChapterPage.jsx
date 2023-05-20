@@ -5,7 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { FiArrowLeftCircle } from "react-icons/fi";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const ChapterPage = () => {
   const { chapterId } = useParams();
