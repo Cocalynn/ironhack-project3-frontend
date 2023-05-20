@@ -135,11 +135,12 @@ const CoursePage = () => {
           <Row>
             {course.chapters.map((chapter, index) => (
               <Card key={index} style={{ width: "18rem", margin: "10px" }}>
-                <Card.Body>
-                  <Card.Title>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="mb-auto">
                     Chapter {index + 1}: {chapter.name}
                   </Card.Title>
                   <Button
+                    size="sm"
                     as={Link}
                     to={`/courses/${courseId}/chapters/${chapter._id}`}
                   >

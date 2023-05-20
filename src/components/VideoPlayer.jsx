@@ -1,6 +1,6 @@
 import React from "react";
-import YouTube from "react-youtube";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Row, Col } from "react-bootstrap";
+import ReactPlayer from "react-player/youtube";
 import { SlArrowRightCircle, SlArrowLeftCircle } from "react-icons/sl";
 
 class VideoPlayer extends React.Component {
@@ -28,39 +28,40 @@ class VideoPlayer extends React.Component {
     const { currentChapterIndex } = this.state;
     const { chapters } = this.props; // array of YouTube video IDs
 
-    const opts = {
-      height: "390",
-      width: "640",
-      playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        autoplay: 0,
-      },
-    };
-
     return (
-      <Container className="d-flex flex-column align-items-center">
+      <Container>
         <h1 className="mb-4 text-center">
           {chapters[currentChapterIndex].name}
         </h1>
-        <div style={{ width: opts.width, display: "block", margin: "auto" }}>
-          <YouTube
-            videoId={chapters[currentChapterIndex].videoId}
-            opts={opts}
-          />
-        </div>
-        <div className="d-flex justify-content-around mt-3">
-          {currentChapterIndex > 0 && (
-            <Button variant="warning" onClick={this.handlePrevious}>
-              <SlArrowLeftCircle /> Previous
-            </Button>
-          )}
-          <Button onClick={this.handleMarkAsDone}>Mark Done</Button>
-          {currentChapterIndex < chapters.length - 1 && (
-            <Button variant="warning" onClick={this.handleNext}>
-              Next <SlArrowRightCircle />
-            </Button>
-          )}
-        </div>
+        <Row>
+          <Col lg={8} md={10} sm={12} className="mx-auto mb-4">
+            <div className="position-relative" style={{ paddingTop: "56.25%" }}>
+              <ReactPlayer
+                url={`https://www.youtube.com/watch?v=${chapters[currentChapterIndex].videoId}`}
+                style={{ position: "absolute", top: 0, left: 0 }}
+                width="100%"
+                height="100%"
+              />
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <div className="d-flex justify-content-around mt-3">
+              {currentChapterIndex > 0 && (
+                <Button variant="warning" onClick={this.handlePrevious}>
+                  <SlArrowLeftCircle /> Previous
+                </Button>
+              )}
+              <Button onClick={this.handleMarkAsDone}>Mark Done</Button>
+              {currentChapterIndex < chapters.length - 1 && (
+                <Button variant="warning" onClick={this.handleNext}>
+                  Next <SlArrowRightCircle />
+                </Button>
+              )}
+            </div>
+          </Col>
+        </Row>
       </Container>
     );
   }
