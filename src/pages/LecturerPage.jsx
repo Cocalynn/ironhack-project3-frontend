@@ -3,7 +3,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:5005";
+const API_URL = "http://localhost:3010";
 
 const LecturerPage = () => {
   const [lecturer, setLecturer] = useState(null);
