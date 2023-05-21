@@ -15,7 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
-import LabelBottomNavigation from '../components/BottomNavigation';
+import FootBar from '../components/FootBar';
 
 const mapStateToProps = state => {
   return { session: state.session }
@@ -272,7 +272,7 @@ class Home extends Component {
                       left: '50%',
                       transform: 'translateX(-50%)',
                     }}}>
-                <LabelBottomNavigation />
+                <FootBar />
               </Box>
             </Box>
             

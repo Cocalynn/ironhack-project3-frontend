@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 
 
 
-export default function FixedBottomNavigation() {
+export default function FootBar() {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
 
