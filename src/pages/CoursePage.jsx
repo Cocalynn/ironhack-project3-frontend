@@ -1,13 +1,24 @@
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import React from "react";
 import ReviewForm from "../components/ReviewForm";
 import CourseProgress from "../components/CourseProgress";
 import Reviews from "../components/Reviews";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
 import defaultCourseImg from "../assets/images/course-default-image.webp";
-import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { Card, Image, Row, Col, Button, Badge } from "react-bootstrap";
+import { useParams, Link as RouterLink } from "react-router-dom";
+import LinearProgress from "@material-ui/core/LinearProgress";
+import CardActions from "@mui/material/CardActions";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import CardMedia from "@mui/material/CardMedia";
+import Grid from "@mui/material/Grid";
+import Badge from "@mui/material/Badge";
+import Avatar from "@mui/material/Avatar";
+import CardHeader from "@mui/material/CardHeader";
+import EditIcon from "@material-ui/icons/Edit";
 import appConfig from "../config/app-config.json";
 import { useSelector } from "react-redux";
 
@@ -36,11 +47,22 @@ const CoursePage = () => {
 
   const { courseId } = useParams();
 
+  const fetchYoutubeThumbnail = (youtubeId) => {
+    return `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
+  };
+
   const getCourse = () => {
     axios
       .get(`${appConfig.apiUri}/api/courses/${courseId}`, config)
-      .then((response) => {
+      .then(async (response) => {
         const oneCourse = response.data;
+
+        if (oneCourse.chapters.length > 0 && oneCourse.chapters[0].youtubeId) {
+          oneCourse.thumbnail = await fetchYoutubeThumbnail(
+            oneCourse.chapters[0].youtubeId
+          );
+        }
+
         setCourse(oneCourse);
 
         axios
@@ -69,8 +91,6 @@ const CoursePage = () => {
     getCourse();
   }, []);
 
-  console.log(lecturer);
-
   // Checkout
   const checkout = () => {
     axios
@@ -92,122 +112,149 @@ const CoursePage = () => {
   };
 
   return (
-    <div className="container">
+    <Grid container spacing={3}>
       {course && (
         <>
-          <Row>
-            <Col xs={12} lg={8}>
-              <Card style={{ marginBottom: "15px" }}>
-                <Card.Img src={defaultCourseImg} />
-                <hr />
-                <Card.Body>
-                  <Card.Title>
-                    <h1>{course.name}</h1>
-                  </Card.Title>
-                  <Card.Text>
-                    <>
-                      <span>{course.description}</span>
-                    </>
-                  </Card.Text>
-                  <Card.Text>
-                    <span>
-                      <Badge variant="primary">${course.price}</Badge>
-                    </span>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-              <div>
-                <Button variant="primary" type="submit" onClick={checkout}>
+          <Grid item xs={12} lg={8}>
+            <Card style={{ margin: "20px" }}>
+              <div style={{ position: "relative", paddingTop: "56.25%" }}>
+                <CardMedia
+                  component="img"
+                  alt="Course image"
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                  }}
+                  image={course.thumbnail || defaultCourseImg}
+                />
+              </div>
+              <CardContent>
+                <Typography variant="h5" component="div">
+                  {course.name}
+                </Typography>
+                <Typography variant="body2" color="secondary">
+                  {course.description}
+                </Typography>
+                <Badge
+                  badgeContent={course.price}
+                  color="primary"
+                  style={{ marginLeft: "20px" }}
+                />
+              </CardContent>
+              <CardActions>
+                <Button variant="contained" color="primary" onClick={checkout}>
                   Checkout
                 </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<FavoriteIcon />}
+                >
+                  Add to Wishlist
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
 
-                <Button variant="warning">Add to Wishlist</Button>
-              </div>
-            </Col>
-
-            <Col xs={12} lg={4}>
-              {lecturer && (
-                <Card style={{ marginBottom: "15px" }}>
-                  <Card.Body className="d-flex justify-content-between align-items-center">
-                    <div className="d-flex align-items-center">
-                      <Image
-                        src={defaultProfileImg || lecturer.profileImage}
-                        style={{
-                          width: "40px",
-                          borderRadius: "50%",
-                          marginRight: "5px",
-                        }}
-                        alt="Profile Image"
-                      />
-                      <div className="ml-4">
-                        <h5 className="mb-0">{lecturer.name}</h5>
-                      </div>
-                    </div>
-                    <Button variant="outline-primary" size="sm">
+          <Grid item xs={12} lg={4}>
+            {lecturer && (
+              <Card style={{ margin: "20px" }}>
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      alt="Profile Image"
+                      src={defaultProfileImg || lecturer.profileImage}
+                    />
+                  }
+                  action={
+                    <Button
+                      startIcon={<EditIcon />}
+                      size="small"
+                      variant="outlined"
+                    >
                       Edit
                     </Button>
-                  </Card.Body>
+                  }
+                  title={lecturer.name}
+                />
+                <CardContent>
                   <hr />
-                  <Card.Body className="d-flex justify-content-between align-items-center bg-light">
-                    {/* Show review form only if the course is completed */}
-                    <Button as={Link} to={`/add-chapter/${courseId}`}>
+                  <Grid item xs={6}>
+                    <Button
+                      style={{ marginBottom: "5px" }}
+                      variant="contained"
+                      component={RouterLink}
+                      to={`/add-chapter/${courseId}`}
+                    >
                       Add Chapter
                     </Button>
-                    {isCourseCompleted ? (
-                      <>
-                        <Button
-                          variant="outline-secondary"
-                          size="sm"
-                          onClick={toggleReviewForm}
-                        >
-                          Leave a Review
-                        </Button>
-                      </>
-                    ) : (
-                      <span>
-                        Course needs to be completed to leave a review
-                      </span>
-                    )}
-                  </Card.Body>
-                  {/* Show review form if it's toggled on */}
-                  {showReviewForm && (
-                    <Card.Body>
-                      <ReviewForm
-                        courseId={courseId}
-                        toggleReviewForm={toggleReviewForm}
-                      />
-                    </Card.Body>
+                  </Grid>
+
+                  {isCourseCompleted ? (
+                    <Grid item xs={6}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={toggleReviewForm}
+                      >
+                        Leave a Review
+                      </Button>
+                    </Grid>
+                  ) : (
+                    <Typography variant="body2">
+                      Finish the course to leave a review
+                    </Typography>
                   )}
-                </Card>
-              )}
-              <Reviews reviews={reviews} />
-              <CourseProgress
-                userId="646898e9594a6df48614c609"
-                courseId={courseId}
-              />
-            </Col>
-          </Row>
-          <Row>
-            {course.chapters.map((chapter, index) => (
-              <Card key={index} style={{ width: "18rem", margin: "10px" }}>
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="mb-auto">
-                    Chapter {index + 1}: {chapter.name}
-                  </Card.Title>
-                  <Button
-                    size="sm"
-                    as={Link}
-                    to={`/courses/${courseId}/chapters/${chapter._id}`}
-                  >
-                    Go to Chapter
-                  </Button>
-                </Card.Body>
+                </CardContent>
+                {showReviewForm && (
+                  <CardContent>
+                    <ReviewForm
+                      courseId={courseId}
+                      toggleReviewForm={toggleReviewForm}
+                    />
+                  </CardContent>
+                )}
               </Card>
+            )}
+            <Reviews reviews={reviews} />
+            <CourseProgress
+              userId="646898e9594a6df48614c609"
+              courseId={courseId}
+            />
+          </Grid>
+          <Grid container spacing={2}>
+            {course.chapters.map((chapter, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                <Card style={{ display: "flex", justifyContent: "center" }}>
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      Chapter {index + 1}: {chapter.name}
+                    </Typography>
+                    <hr />
+                    <CardActions>
+                      <Grid container justify="center">
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="primary"
+                          component={RouterLink}
+                          to={`/courses/${courseId}/chapters/${chapter._id}`}
+                        >
+                          Go to Chapter
+                        </Button>
+                      </Grid>
+                    </CardActions>
+                  </CardContent>
+                </Card>
+              </Grid>
             ))}
-          </Row>
+          </Grid>
         </>
       )}
-    </div>
+    </Grid>
   );
 };
 
