@@ -6,6 +6,8 @@ import { Spinner } from "react-bootstrap";
 import CourseSearch from "../components/CourseSearch";
 import appConfig from "../config/app-config.json";
 import { useSelector } from "react-redux";
+import FootBar from '../components/FootBar';
+
 
 const AllCoursesPage = () => {
   const session = useSelector((state) => state.session);
@@ -62,6 +64,7 @@ const AllCoursesPage = () => {
           </div>
         ))}
       </div>
+      <FootBar />
     </div>
   );
 };

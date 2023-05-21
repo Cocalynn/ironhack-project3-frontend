@@ -1,24 +1,39 @@
-import React, { Component } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
-import cognitoUtils from "../lib/cognitoUtils";
-import request from "request";
-import appConfig from "../config/app-config.json";
+import React, { Component } from 'react'
+import axios from 'axios'
+import { connect } from 'react-redux'
+import cognitoUtils from '../lib/cognitoUtils'
+import request from 'request'
+import appConfig from '../config/app-config.json'
+import GuestHomePage from "./GuestHomePage";
+import RegisteredCourseCard from '../components/RegisteredCourseCard';
+import WishlistCourseCard from '../components/WishlistCourseCard';
+import { Typography, Avatar, Button, Box, Divider } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
+import FootBar from '../components/FootBar';
 
-const mapStateToProps = (state) => {
-  return { session: state.session };
-};
+const mapStateToProps = state => {
+  return { session: state.session }
+}
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      apiStatus: "Not called",
-      file: null,
-      userProfilePic: null,
-      nickname: null,
-      newNickName: "",
-    };
+  constructor (props) {
+    super(props)
+    this.state = { 
+      apiStatus: 'Not called', 
+      file: null, 
+      userProfilePic: null, 
+      nickname: null, 
+      newNickName:"",
+      openDialog: false,
+      registeredCourses: [],
+      wishlistCourses: []
+     }
   }
 
   componentDidMount() {
@@ -58,8 +73,8 @@ class Home extends Component {
         },
       };
 
-      axios
-        .get(`${appConfig.apiUri}/user`, config)
+      // Get user nickname and profile picture
+      axios.get(`${appConfig.apiUri}/user`, config)
         .then((response) => {
           this.setState({
             userProfilePic: `${appConfig.apiUri}/${response.data.path}`,
@@ -68,15 +83,44 @@ class Home extends Component {
           this.setState({ nickname: response.data.nickname });
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
+
+      // Get user registered courses
+      axios.get(`${appConfig.apiUri}/user/registered-courses`, config)
+        .then((response) => {
+          console.log(response.data)
+          this.setState({ registeredCourses: response.data })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      // Get user wishlist courses
+      axios.get(`${appConfig.apiUri}/user/wishlist-courses`, config)
+        .then((response) => {
+          console.log(response.data)
+          this.setState({ wishlistCourses: response.data })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 
   onSignOut = (e) => {
-    e.preventDefault();
-    cognitoUtils.signOutCognitoSession();
+    e.preventDefault()
+    cognitoUtils.signOutCognitoSession()
+  }
+
+  openNicknameDialog = () => {
+    this.setState({ openDialog: true });
   };
+
+  closeNicknameDialog = () => {
+    this.setState({ openDialog: false });
+  };  
+
 
   handleNicknameChange = (e) => {
     this.setState({ newNickname: e.target.value });
@@ -102,15 +146,22 @@ class Home extends Component {
       .catch((error) => {
         console.error(error);
       });
-  };
+      this.setState({ openDialog: false });
+  }
+  
+
 
   handleFileChange = (e) => {
     this.setState({ file: e.target.files[0] });
   };
 
   uploadProfilePicture = (e) => {
-    const formData = new FormData();
-    formData.append("profilePic", this.state.file);
+    e.preventDefault();
+    if (!this.state.file) {
+      return alert('Please select a file first!')
+    }
+    const formData = new FormData()
+    formData.append('profilePic', this.state.file)
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -120,73 +171,161 @@ class Home extends Component {
     axios
       .post(`${appConfig.apiUri}/user/upload-image`, formData, config)
       .then((response) => {
-        console.log(response);
-        this.setState({
-          userProfilePic: `${appConfig.apiUri}/${response.data.path}`,
-        });
+        console.log(response)
+        this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
+        this.setState({ file: null })
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  render() {
+
+  openFilePicker = () => {
+    document.getElementById('filePicker').click();
+  };
+
+  render () {
+    const { theme } = this.props;
+
+
     return (
       <div className="Home">
         <header className="Home-header">
-          {this.props.session.isLoggedIn ? (
-            <div>
-              {/* <p>Welcome! {this.props.session.user.userName}</p> */}
-              <p>
-                Welcome!{" "}
-                {this.state.nickname
-                  ? this.state.nickname
-                  : this.props.session.user.userName}
-              </p>
-              <img src={this.state.userProfilePic} style={{ width: "50px" }} />
-              <p>{this.props.session.user.email}</p>
-
-              <form onSubmit={this.changeNickname}>
-                <label>
-                  New Nickname:
-                  <input
-                    type="text"
-                    value={this.state.newNickname}
-                    onChange={this.handleNicknameChange}
+          { this.props.session.isLoggedIn ? (
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'60px' }}>
+                <Box sx={{ position: 'relative' }}>
+                  <Avatar
+                    sx={{ width: 170, height: 170 }}
+                    src={this.state.userProfilePic}
+                    alt="Profile Picture"
                   />
-                </label>
-                <button type="submit">Submit</button>
-              </form>
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 10,
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      height: '40px',
+                      width: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Button onClick={this.openFilePicker} size="small">
+                      <EditIcon />
+                    </Button>
+                  </Box>
+                </Box>
+                <Box m={3}>
+                  <input type="file" id="filePicker" style={{ display: 'none' }} onChange={this.handleFileChange} />
+                  <Button onClick={this.uploadProfilePicture} variant="contained" color="primary" size="small">
+                    <strong>Upload</strong>
+                  </Button>
+                </Box>
+              </Box>
 
-              <div>
-                <input type="file" onChange={this.handleFileChange} />
-                <button onClick={this.uploadProfilePicture}>
-                  Upload profile picture
-                </button>
-              </div>
-
-              <hr></hr>
-              <div>
-                <div>API status: {this.state.apiStatus}</div>
-                <div className="Home-api-response">
-                  {this.state.apiResponse}
-                </div>
-              </div>
-              <p></p>
-              <a className="Home-link" href="#" onClick={this.onSignOut}>
-                Sign out
-              </a>
-            </div>
-          ) : (
-            <div>
-              <p>You are not logged in.</p>
-              <a
-                className="Home-link"
-                href={cognitoUtils.getCognitoSignInUri()}
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                justifyContent="center" 
+                flexDirection="column"
               >
-                Sign in
-              </a>
-            </div>
+                <Box display="flex" alignItems="center">
+                  <Typography variant="h6" textAlign="center" ml={1} sx={{fontWeight:'bold'}}>
+                    {this.state.nickname ? this.state.nickname : this.props.session.user.userName}
+                  </Typography>
+                  <Button onClick={this.openNicknameDialog}>
+                    <EditIcon />
+                  </Button>
+                </Box>
+                <Typography variant="body1" textAlign="center">
+                  {this.props.session.user.email}
+                </Typography>
+              </Box>
+
+              <Dialog open={this.state.openDialog} onClose={this.closeNicknameDialog}>
+                <DialogTitle>Change Nickname</DialogTitle>
+                <DialogContent>
+                  <TextField 
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="New Nickname"
+                    type="text"
+                    fullWidth
+                    value={this.state.newNickname} 
+                    onChange={this.handleNicknameChange} 
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.closeNicknameDialog} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={this.changeNickname} color="primary">
+                    Change
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Box m={2}>
+                <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
+                    <Typography sx={{fontWeight:'bold'}}>Registered</Typography>
+                </Divider>
+
+                {this.state.registeredCourses.length > 0 ? (
+                  this.state.registeredCourses.map((course, index) => (
+                    <RegisteredCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} progress={course.progress} />
+                  ))
+                ) : (
+                  <Typography variant="body1" textAlign="center">
+                    No registered courses
+                  </Typography>
+                )}
+
+                <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
+                
+                <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
+                    <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
+                </Divider>
+
+
+                {this.state.wishlistCourses.length > 0 ? (
+                  this.state.wishlistCourses.map((course, index) => (
+                    <WishlistCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} price={course.price} />
+                  ))
+                ) : (
+                  <Typography variant="body1" textAlign="center">
+                    No wishlist courses
+                  </Typography>
+                )}
+
+                <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
+              </Box>
+
+              <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
+                <Button variant="contained" color="primary" onClick={this.onSignOut} >
+                  Sign out
+                </Button>
+              </Box>
+
+              <Box sx={{
+                    width: '100%',
+                    position: 'fixed',
+                    bottom: 0,
+                    '@media (min-width: 600px)': {
+                      width: '600px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                    }}}>
+                <FootBar />
+              </Box>
+            </Box>
+            
+          ) : (
+            <GuestHomePage href={cognitoUtils.getCognitoSignInUri()} />
           )}
         </header>
       </div>
@@ -194,4 +333,11 @@ class Home extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Home);
+function ThemedHome(props) {
+  const theme = useTheme();
+
+  return <Home {...props} theme={theme} />;
+}
+
+export default connect(mapStateToProps)(ThemedHome);
+
