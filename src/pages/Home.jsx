@@ -4,6 +4,17 @@ import { connect } from 'react-redux'
 import cognitoUtils from '../lib/cognitoUtils'
 import request from 'request'
 import appConfig from '../config/app-config.json'
+import GuestHomePage from "./GuestHomePage";
+import RegisteredCourseCard from '../components/RegisteredCourseCard';
+import WishlistCourseCard from '../components/WishlistCourseCard';
+import { Card, CardContent, Typography, Grid, Avatar, Button, ListItem, List, ListItemText, ListItemAvatar, Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import TextField from '@mui/material/TextField';
 
 const mapStateToProps = state => {
   return { session: state.session }
@@ -12,7 +23,15 @@ const mapStateToProps = state => {
 class Home extends Component {
   constructor (props) {
     super(props)
-    this.state = { apiStatus: 'Not called', file: null, userProfilePic: null, nickname: null, newNickName:"" }
+    this.state = { 
+      apiStatus: 'Not called', 
+      file: null, 
+      userProfilePic: null, 
+      nickname: null, 
+      newNickName:"",
+      openDialog: false,
+
+     }
   }
 
   componentDidMount () {
@@ -69,6 +88,14 @@ class Home extends Component {
     cognitoUtils.signOutCognitoSession()
   }
 
+  openNicknameDialog = () => {
+    this.setState({ openDialog: true });
+  };
+
+  closeNicknameDialog = () => {
+    this.setState({ openDialog: false });
+  };  
+
 
   handleNicknameChange = (e) => {
     this.setState({ newNickname: e.target.value })
@@ -89,6 +116,9 @@ class Home extends Component {
       .catch(error => {
         console.error(error);
       });
+    
+      this.setState({ openDialog: false });
+
   }
   
 
@@ -97,6 +127,12 @@ class Home extends Component {
   }
 
   uploadProfilePicture = (e) => {
+    e.preventDefault();
+    if (!this.state.file) {
+      return alert('Please select a file first!')
+    }
+
+
     const formData = new FormData()
     formData.append('profilePic', this.state.file)
     const config = {
@@ -109,6 +145,7 @@ class Home extends Component {
       .then((response) => {
         console.log(response)
         this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
+        this.setState({ file: null })
       })
       .catch((error) => {
         console.log(error)
@@ -116,55 +153,124 @@ class Home extends Component {
 
   }
 
+  openFilePicker = () => {
+    document.getElementById('filePicker').click();
+  };
+
   render () {
+    const { theme } = this.props;
+
+
     return (
       <div className="Home">
         <header className="Home-header">
           { this.props.session.isLoggedIn ? (
-            <div>
-              {/* <p>Welcome! {this.props.session.user.userName}</p> */}
-              <p>Welcome! {this.state.nickname ? this.state.nickname: this.props.session.user.userName}</p>
-              <img src={this.state.userProfilePic}/>
-              <p>{this.props.session.user.email}</p>
+            <Box m={3}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'60px' }}>
+                <Box sx={{ position: 'relative' }}>
+                  <Avatar
+                    sx={{ width: 170, height: 170 }}
+                    src={this.state.userProfilePic}
+                    alt="Profile Picture"
+                  />
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: 0,
+                      right: 10,
+                      backgroundColor: 'white',
+                      borderRadius: '50%',
+                      height: '40px',
+                      width: '40px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Button onClick={this.openFilePicker} size="small">
+                      <EditIcon />
+                    </Button>
+                  </Box>
+                </Box>
+                <Box m={3}>
+                  <input type="file" id="filePicker" style={{ display: 'none' }} onChange={this.handleFileChange} />
+                  <Button onClick={this.uploadProfilePicture} variant="contained" color="primary" size="small">
+                    <strong>Upload</strong>
+                  </Button>
+                </Box>
+              </Box>
 
-              <form onSubmit={this.changeNickname}>
-                <label>
-                  New Nickname:
-                  <input 
-                    type="text" 
+              <Box 
+                display="flex" 
+                alignItems="center" 
+                justifyContent="center" 
+                flexDirection="column"
+              >
+                <Box display="flex" alignItems="center">
+                  <Typography variant="h6" textAlign="center" ml={1}>
+                    {this.state.nickname ? this.state.nickname : this.props.session.user.userName}
+                  </Typography>
+                  <Button onClick={this.openNicknameDialog}>
+                    <EditIcon />
+                  </Button>
+                </Box>
+                <Typography variant="body1" textAlign="center">
+                  {this.props.session.user.email}
+                </Typography>
+              </Box>
+
+              <Dialog open={this.state.openDialog} onClose={this.closeNicknameDialog}>
+                <DialogTitle>Change Nickname</DialogTitle>
+                <DialogContent>
+                  <TextField 
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="New Nickname"
+                    type="text"
+                    fullWidth
                     value={this.state.newNickname} 
                     onChange={this.handleNicknameChange} 
                   />
-                </label>
-                <button type="submit">Submit</button>
-              </form>
-
-
-              <div>
-                <input type="file" onChange={this.handleFileChange}/>
-                <button onClick={this.uploadProfilePicture}>Upload profile picture</button>
-              </div>
-
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.closeNicknameDialog} color="primary">
+                    Cancel
+                  </Button>
+                  <Button onClick={this.changeNickname} color="primary">
+                    Change
+                  </Button>
+                </DialogActions>
+              </Dialog>
 
               <hr></hr>
-              <div>
-                <div>API status: {this.state.apiStatus}</div>
-                <div className="Home-api-response">{this.state.apiResponse}</div>
-              </div>
-              <p></p>
-              <a className="Home-link" href="#" onClick={this.onSignOut}>Sign out</a>
-            </div>
-          ) : (
-            <div>
-              <p>You are not logged in.</p>
-              <a className="Home-link" href={cognitoUtils.getCognitoSignInUri()}>Sign in</a>
-            </div>
-          )}
+              <p>Registered Courses</p>
+              <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
+              
+              <hr></hr>
+              <p>Wishlist Courses</p>
+              <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
 
+              <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
+                <Button variant="contained" color="primary" onClick={this.onSignOut} >
+                  Sign out
+                </Button>
+              </Box>
+
+            </Box>
+          ) : (
+            <GuestHomePage href={cognitoUtils.getCognitoSignInUri()} />
+          )}
         </header>
       </div>
     )
   }
 }
 
-export default connect(mapStateToProps)(Home)
+function ThemedHome(props) {
+  const theme = useTheme();
+
+  return <Home {...props} theme={theme} />;
+}
+
+export default connect(mapStateToProps)(ThemedHome);

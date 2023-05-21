@@ -1,5 +1,6 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
+import GuestHomePage from "./pages/GuestHomePage";
 import Callback from "./pages/Callback";
 import Home from "./pages/Home";
 import AddCoursePage from "./pages/AddCoursePage";
@@ -10,15 +11,48 @@ import NavBar from "./components/NavBar";
 import FooterBar from "./components/FooterBar";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
+import { createTheme, ThemeProvider } from '@mui/material';
+
 
 import { createBrowserHistory } from "history";
 
 const history = createBrowserHistory();
 
+// Custom theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#ff593b', // Logo color
+    },
+    background: {
+      default: '#121212', // Background color
+    },
+    text: {
+      primary: '#FFFFFF', // White text color for readability
+      secondary: '#BDBDBD', // Light gray secondary text color
+      
+    },
+  },
+  typography: {
+    fontFamily: 'Roboto, Arial, sans-serif', // Choose a suitable font family
+  },
+  components: {
+    // Override specific components if needed
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8, // Rounded button corners
+        },
+      },
+    },
+  },
+});
+
+
 const App = () => (
-  <>
+  <ThemeProvider theme={theme}>
     <Router history={history}>
-      <NavBar />
+      {/* <NavBar /> */}
       <Route exact path="/" component={Home} />
       <Route exact path="/callback" component={Callback} />
       <Route exact path="/courses" component={AllCoursesPage} />
@@ -35,9 +69,9 @@ const App = () => (
         path="/courses/:courseId/chapters/:chapterId"
         component={ChapterPage}
       />
-      <FooterBar />
+      {/* <FooterBar /> */}
     </Router>
-  </>
+  </ThemeProvider>
 );
 
 export default App;
