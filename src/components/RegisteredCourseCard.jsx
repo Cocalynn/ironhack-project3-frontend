@@ -41,7 +41,7 @@ function RegisteredCourseCard(props) {
               <strong>{props.title}</strong>
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              <strong>{props.lecturer}</strong>
+              By <strong>{props.lecturer}</strong>
             </Typography>
           </Box>
         </CardContent>
