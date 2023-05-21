@@ -277,15 +277,13 @@ class Home extends Component {
 
                 {this.state.registeredCourses.length > 0 ? (
                   this.state.registeredCourses.map((course, index) => (
-                    <RegisteredCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} progress={course.progress} />
+                    <RegisteredCourseCard key={index} title={course.course.name} lecturer={course.course.lecturer.name} image={course.course.courseImage} progress={course.progress} />
                   ))
                 ) : (
                   <Typography variant="body1" textAlign="center">
                     No registered courses
                   </Typography>
                 )}
-
-                <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
                 
                 <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
                     <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
@@ -294,15 +292,13 @@ class Home extends Component {
 
                 {this.state.wishlistCourses.length > 0 ? (
                   this.state.wishlistCourses.map((course, index) => (
-                    <WishlistCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} price={course.price} />
+                    <WishlistCourseCard key={index} title={course.name} lecturer={course.lecturer.name} image={course.courseImage} price={course.price} />
                   ))
                 ) : (
                   <Typography variant="body1" textAlign="center">
                     No wishlist courses
                   </Typography>
                 )}
-
-                <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
               </Box>
 
               <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
