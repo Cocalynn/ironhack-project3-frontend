@@ -2,16 +2,23 @@ import axios from "axios";
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-const API_URL = "http://localhost:3010";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const LecturerPage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
   const [lecturer, setLecturer] = useState(null);
   const { lecturerId } = useParams();
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/lecturers/${lecturerId}`)
+      .get(`${appConfig.apiUri}/api/lecturers/${lecturerId}`, config)
       .then((response) => {
         const lecturerData = response.data;
         console.log(lecturerData); // log the lecturerData object
