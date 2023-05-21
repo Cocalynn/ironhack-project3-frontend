@@ -22,8 +22,8 @@ const CourseSearch = ({ setCourses }) => {
     // Make a request to the server with the search term
     if (searchTerm !== "") {
       axios
-        .get(`${appConfig.apiUri}/api/search`, config, 
-        {
+        .get(`${appConfig.apiUri}/api/search`, {
+          ...config,
           params: { term: searchTerm },
         })
         .then((response) => {
