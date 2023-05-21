@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import ReviewForm from "../components/ReviewForm";
 import CourseProgress from "../components/CourseProgress";
+import Reviews from "../components/Reviews";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
 import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ const API_URL = "http://localhost:3010";
 const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [lecturer, setLecturer] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const toggleReviewForm = () => {
@@ -38,6 +40,14 @@ const CoursePage = () => {
           .then((lecturerResponse) => {
             const lecturerData = lecturerResponse.data;
             setLecturer(lecturerData);
+          })
+          .catch((error) => console.log(error));
+
+        axios
+          .get(`${API_URL}/api/reviews/course/${courseId}`)
+          .then((reviewResponse) => {
+            const reviewData = reviewResponse.data;
+            setReviews(reviewData);
           })
           .catch((error) => console.log(error));
       })
@@ -71,7 +81,7 @@ const CoursePage = () => {
       {course && (
         <>
           <Row>
-            <Col xs={12} lg={6}>
+            <Col xs={12} lg={8}>
               <Card style={{ marginBottom: "15px" }}>
                 <Card.Img src={defaultCourseImg} />
                 <hr />
@@ -101,8 +111,8 @@ const CoursePage = () => {
               </div>
             </Col>
 
-            {lecturer && (
-              <Col xs={12} lg={6}>
+            <Col xs={12} lg={4}>
+              {lecturer && (
                 <Card style={{ marginBottom: "15px" }}>
                   <Card.Body className="d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -126,7 +136,7 @@ const CoursePage = () => {
                   <hr />
                   <Card.Body className="d-flex justify-content-between align-items-center bg-light">
                     {/* Show review form only if the course is completed */}
-                    <Button as={Link} to={`/courses/add-chapter/${courseId}`}>
+                    <Button as={Link} to={`/add-chapter/${courseId}`}>
                       Add Chapter
                     </Button>
                     {isCourseCompleted ? (
@@ -155,11 +165,10 @@ const CoursePage = () => {
                     </Card.Body>
                   )}
                 </Card>
-                <Row>
-                  <CourseProgress courseId={courseId} />
-                </Row>
-              </Col>
-            )}
+              )}
+              <Reviews reviews={reviews} />
+              <CourseProgress courseId={courseId} />
+            </Col>
           </Row>
           <Row>
             {course.chapters.map((chapter, index) => (
