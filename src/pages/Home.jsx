@@ -36,49 +36,51 @@ class Home extends Component {
      }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.session.isLoggedIn) {
       // Call the API server GET /auth endpoint with our JWT access token
       // get user information from API server
       const option1 = {
         url: `${appConfig.apiUri}/auth`,
         headers: {
-          Authorization: `Bearer ${this.props.session.credentials.accessToken}`
-        }
-      }
+          Authorization: `Bearer ${this.props.session.credentials.accessToken}`,
+        },
+      };
 
-      this.setState({ apiStatus: 'Loading...' })
+      this.setState({ apiStatus: "Loading..." });
 
       request.get(option1, (err, resp, body) => {
-        let apiStatus, apiResponse
+        let apiStatus, apiResponse;
         if (err) {
           // is API server started and reachable?
-          apiStatus = 'Unable to reach API'
-          console.error(apiStatus + ': ' + err)
+          apiStatus = "Unable to reach API";
+          console.error(apiStatus + ": " + err);
         } else if (resp.statusCode !== 200) {
           // API returned an error
-          apiStatus = 'Error response received'
-          apiResponse = body
-          console.error(apiStatus + ': ' + JSON.stringify(resp))
+          apiStatus = "Error response received";
+          apiResponse = body;
+          console.error(apiStatus + ": " + JSON.stringify(resp));
         } else {
-          apiStatus = 'Successful response received.'
-          apiResponse = body
+          apiStatus = "Successful response received.";
+          apiResponse = body;
         }
-        this.setState({ apiStatus, apiResponse })
-      })
+        this.setState({ apiStatus, apiResponse });
+      });
 
       const config = {
         headers: {
-          Authorization: `Bearer ${this.props.session.credentials.accessToken}`
-        }
-      }
+          Authorization: `Bearer ${this.props.session.credentials.accessToken}`,
+        },
+      };
 
       // Get user nickname and profile picture
       axios.get(`${appConfig.apiUri}/user`, config)
         .then((response) => {
-          this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
-          console.log(response.data)
-          this.setState({ nickname: response.data.nickname })
+          this.setState({
+            userProfilePic: `${appConfig.apiUri}/${response.data.path}`,
+          });
+          console.log(response.data);
+          this.setState({ nickname: response.data.nickname });
         })
         .catch((error) => {
           console.log(error)
@@ -121,60 +123,63 @@ class Home extends Component {
 
 
   handleNicknameChange = (e) => {
-    this.setState({ newNickname: e.target.value })
-  }
+    this.setState({ newNickname: e.target.value });
+  };
 
   changeNickname = (e) => {
     e.preventDefault();
     const config = {
       headers: {
-        Authorization: `Bearer ${this.props.session.credentials.accessToken}`
-      }
-    }
-    axios.put(`${appConfig.apiUri}/user/change-nickname`, { nickname: this.state.newNickname }, config)
-      .then(response => {
+        Authorization: `Bearer ${this.props.session.credentials.accessToken}`,
+      },
+    };
+    axios
+      .put(
+        `${appConfig.apiUri}/user/change-nickname`,
+        { nickname: this.state.newNickname },
+        config
+      )
+      .then((response) => {
         console.log(response.data); // updated user
         this.setState({ nickname: this.state.newNickname });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-    
       this.setState({ openDialog: false });
-
   }
   
 
+
   handleFileChange = (e) => {
-    this.setState({ file: e.target.files[0] })
-  }
+    this.setState({ file: e.target.files[0] });
+  };
 
   uploadProfilePicture = (e) => {
     e.preventDefault();
     if (!this.state.file) {
       return alert('Please select a file first!')
     }
-
-
     const formData = new FormData()
     formData.append('profilePic', this.state.file)
     const config = {
-      headers: { 
-        'content-type': 'multipart/form-data',
-        Authorization: `Bearer ${this.props.session.credentials.accessToken}` 
-      }
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${this.props.session.credentials.accessToken}`,
+      },
     };
-    axios.post(`${appConfig.apiUri}/user/upload-image`, formData, config)
+    axios
+      .post(`${appConfig.apiUri}/user/upload-image`, formData, config)
       .then((response) => {
         console.log(response)
         this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
         this.setState({ file: null })
       })
       .catch((error) => {
-        console.log(error)
-      })
+        console.log(error);
+      });
+  };
 
-  }
 
   openFilePicker = () => {
     document.getElementById('filePicker').click();
@@ -286,6 +291,7 @@ class Home extends Component {
                     <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
                 </Divider>
 
+
                 {this.state.wishlistCourses.length > 0 ? (
                   this.state.wishlistCourses.map((course, index) => (
                     <WishlistCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} price={course.price} />
@@ -323,7 +329,7 @@ class Home extends Component {
           )}
         </header>
       </div>
-    )
+    );
   }
 }
 
@@ -334,3 +340,4 @@ function ThemedHome(props) {
 }
 
 export default connect(mapStateToProps)(ThemedHome);
+

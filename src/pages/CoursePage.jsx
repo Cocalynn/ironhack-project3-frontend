@@ -1,16 +1,28 @@
 import axios from "axios";
 import React from "react";
 import ReviewForm from "../components/ReviewForm";
+import CourseProgress from "../components/CourseProgress";
+import Reviews from "../components/Reviews";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
+import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Card, Image, Row, Col, Button, Badge } from "react-bootstrap";
-
-const API_URL = "http://localhost:3010";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const CoursePage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const [course, setCourse] = useState(null);
   const [lecturer, setLecturer] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   const toggleReviewForm = () => {
@@ -26,16 +38,27 @@ const CoursePage = () => {
 
   const getCourse = () => {
     axios
-      .get(`${API_URL}/api/courses/${courseId}`)
+      .get(`${appConfig.apiUri}/api/courses/${courseId}`, config)
       .then((response) => {
         const oneCourse = response.data;
         setCourse(oneCourse);
 
         axios
-          .get(`${API_URL}/api/lecturers/${oneCourse.lecturer}`)
+          .get(
+            `${appConfig.apiUri}/api/lecturers/${oneCourse.lecturer}`,
+            config
+          )
           .then((lecturerResponse) => {
             const lecturerData = lecturerResponse.data;
             setLecturer(lecturerData);
+          })
+          .catch((error) => console.log(error));
+
+        axios
+          .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
+          .then((reviewResponse) => {
+            const reviewData = reviewResponse.data;
+            setReviews(reviewData);
           })
           .catch((error) => console.log(error));
       })
@@ -51,26 +74,32 @@ const CoursePage = () => {
   // Checkout
   const checkout = () => {
     axios
-      .post(`${API_URL}/api/checkout`, { courseId }, {
-        headers: {
-          'Content-Type': 'application/json'
+      .post(
+        `${appConfig.apiUri}/api/checkout`,
+        { courseId },
+        {
+          headers: {
+            Authorization: `Bearer ${session.credentials.accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
+      )
       .then((response) => {
         console.log(response.data);
-        window.location.href = response.data.url
+        window.location.href = response.data.url;
       })
       .catch((error) => console.log(error));
   };
-
 
   return (
     <div className="container">
       {course && (
         <>
           <Row>
-            <Col xs={12} lg={6}>
+            <Col xs={12} lg={8}>
               <Card style={{ marginBottom: "15px" }}>
+                <Card.Img src={defaultCourseImg} />
+                <hr />
                 <Card.Body>
                   <Card.Title>
                     <h1>{course.name}</h1>
@@ -88,17 +117,16 @@ const CoursePage = () => {
                 </Card.Body>
               </Card>
               <div>
-                  <Button variant="primary" type="submit" onClick={checkout}>
-                    Checkout
-                  </Button>
-
+                <Button variant="primary" type="submit" onClick={checkout}>
+                  Checkout
+                </Button>
 
                 <Button variant="warning">Add to Wishlist</Button>
               </div>
             </Col>
 
-            {lecturer && (
-              <Col xs={12} lg={6}>
+            <Col xs={12} lg={4}>
+              {lecturer && (
                 <Card style={{ marginBottom: "15px" }}>
                   <Card.Body className="d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
@@ -122,14 +150,11 @@ const CoursePage = () => {
                   <hr />
                   <Card.Body className="d-flex justify-content-between align-items-center bg-light">
                     {/* Show review form only if the course is completed */}
+                    <Button as={Link} to={`/add-chapter/${courseId}`}>
+                      Add Chapter
+                    </Button>
                     {isCourseCompleted ? (
                       <>
-                        <Button
-                          as={Link}
-                          to={`/courses/add-chapter/${courseId}`}
-                        >
-                          Add Chapter
-                        </Button>
                         <Button
                           variant="outline-secondary"
                           size="sm"
@@ -154,17 +179,23 @@ const CoursePage = () => {
                     </Card.Body>
                   )}
                 </Card>
-              </Col>
-            )}
+              )}
+              <Reviews reviews={reviews} />
+              <CourseProgress
+                userId="646898e9594a6df48614c609"
+                courseId={courseId}
+              />
+            </Col>
           </Row>
           <Row>
             {course.chapters.map((chapter, index) => (
               <Card key={index} style={{ width: "18rem", margin: "10px" }}>
-                <Card.Body>
-                  <Card.Title>
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="mb-auto">
                     Chapter {index + 1}: {chapter.name}
                   </Card.Title>
                   <Button
+                    size="sm"
                     as={Link}
                     to={`/courses/${courseId}/chapters/${chapter._id}`}
                   >

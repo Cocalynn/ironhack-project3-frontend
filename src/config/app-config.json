@@ -9,7 +9,7 @@
         "openid",
         "email",
         "profile",
-        "http://localhost:3010/hello-world.all"                
+        "http://localhost:5005/hello-world.all"                
     ],
-    "apiUri": "http://localhost:3010"
+    "apiUri": "http://localhost:5005"
 }

@@ -4,19 +4,27 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import CourseSearch from "../components/CourseSearch";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 import FootBar from '../components/FootBar';
 
 
-const API_URL = "http://localhost:3010";
-
 const AllCoursesPage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const getAllCourses = () => {
     setIsLoading(true);
     axios
-      .get(`${API_URL}/api/courses`)
+      .get(`${appConfig.apiUri}/api/courses`, config)
       .then((response) => {
         setCourses(response.data);
         setIsLoading(false);

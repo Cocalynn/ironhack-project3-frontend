@@ -53,14 +53,10 @@ const App = () => (
     <Router history={history}>
       <Route exact path="/" component={Home} />
       <Route exact path="/callback" component={Callback} />
+      <Route exact path="/add-course" component={AddCoursePage} />
       <Route exact path="/courses" component={AllCoursesPage} />
-      <Route exact path="/courses/newcourse" component={AddCoursePage} />
       <Route exact path="/courses/:courseId" component={CoursePage} />
-      <Route
-        exact
-        path="/courses/add-chapter/:courseId"
-        component={AddChapterPage}
-      />
+      <Route exact path="/add-chapter/:courseId" component={AddChapterPage} />
       <Route exact path="/lecturers/:lecturerId" component={LecturerPage} />
       <Route
         exact

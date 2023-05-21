@@ -1,48 +1,81 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import VideoPlayer from "../components/VideoPlayer";
-import { useParams } from "react-router-dom";
-
-const API_URL = "http://localhost:3010";
+import { useParams, Link } from "react-router-dom";
+import { Button, Container, Spinner } from "react-bootstrap";
+import { FiArrowLeftCircle } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import appConfig from "../config/app-config.json";
 
 const ChapterPage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const { chapterId } = useParams();
   console.log("chapterId:", chapterId);
   const [chapter, setChapter] = useState(null);
+  const [course, setCourse] = useState(null);
 
   useEffect(() => {
     const fetchChapter = async () => {
-      const response = await axios.get(`${API_URL}/api/chapters/${chapterId}`);
+      const response = await axios.get(
+        `${appConfig.apiUri}/api/chapters/${chapterId}`,
+        config
+      );
       console.log("Response data:", response.data);
       setChapter(response.data);
+
+      // Fetch the course information to get all chapters
+      const courseResponse = await axios.get(
+        `${appConfig.apiUri}/api/courses/${response.data.course}`,
+        config
+      );
+      setCourse(courseResponse.data);
     };
 
     fetchChapter();
   }, [chapterId]);
 
-  if (!chapter) {
-    return <div>Loading...</div>;
+  if (!chapter || !course) {
+    return (
+      <Container className="d-flex justify-content-center py-5">
+        <Spinner animation="border" role="status" variant="warning">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </Container>
+    );
   }
 
-  // Helper function to extract YouTube video ID
-  const extractVideoId = (youtubeLink) => {
-    const regex = /[?&]v=([^&#]*)/i;
-    const match = youtubeLink.match(regex);
-    return match && match[1] ? match[1] : "";
-  };
+  // Get an array of chapters with YouTube video IDs and names
+  let chapters = course.chapters.map((ch) => ({
+    videoId: ch.youtubeId,
+    name: ch.name,
+  }));
 
-  // extract YouTube video ID from chapter link
-  let videoId = "";
-  if (chapter.youtubeId) {
-    videoId = extractVideoId(chapter.youtubeId);
-  }
-  console.log("Extracted video ID:", videoId);
+  // Get the index of the current chapter
+  let currentChapterIndex = course.chapters.findIndex(
+    (ch) => ch._id === chapterId
+  );
 
   return (
-    <div>
-      <h1>{chapter.name}</h1>
-      <VideoPlayer videos={[videoId]} />
-    </div>
+    <Container className="d-flex flex-column align-items-center py-3">
+      <Button
+        as={Link}
+        to={`/courses/${chapter.course}`}
+        className="mb-3 btn-sm"
+      >
+        <FiArrowLeftCircle /> Back to Course
+      </Button>
+      <VideoPlayer
+        chapters={chapters}
+        currentChapterIndex={currentChapterIndex}
+      />
+    </Container>
   );
 };
 
