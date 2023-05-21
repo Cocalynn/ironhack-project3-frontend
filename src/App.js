@@ -8,7 +8,7 @@ import AllCoursesPage from "./pages/AllCoursesPage";
 import CoursePage from "./pages/CoursePage";
 import LecturerPage from "./pages/LecturerPage";
 import NavBar from "./components/NavBar";
-import FooterBar from "./components/FooterBar";
+import BottomNavigation from "./components/BottomNavigation";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -71,7 +71,6 @@ const App = () => (
         path="/courses/:courseId/chapters/:chapterId"
         component={ChapterPage}
       />
-      {/* <FooterBar /> */}
     </Router>
   </ThemeProvider>
 );

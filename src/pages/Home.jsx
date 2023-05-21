@@ -15,6 +15,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import LabelBottomNavigation from '../components/BottomNavigation';
 
 const mapStateToProps = state => {
   return { session: state.session }
@@ -165,7 +166,7 @@ class Home extends Component {
       <div className="Home">
         <header className="Home-header">
           { this.props.session.isLoggedIn ? (
-            <Box m={3}>
+            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'60px' }}>
                 <Box sx={{ position: 'relative' }}>
                   <Avatar
@@ -207,7 +208,7 @@ class Home extends Component {
                 flexDirection="column"
               >
                 <Box display="flex" alignItems="center">
-                  <Typography variant="h6" textAlign="center" ml={1}>
+                  <Typography variant="h6" textAlign="center" ml={1} sx={{fontWeight:'bold'}}>
                     {this.state.nickname ? this.state.nickname : this.props.session.user.userName}
                   </Typography>
                   <Button onClick={this.openNicknameDialog}>
@@ -242,18 +243,19 @@ class Home extends Component {
                   </Button>
                 </DialogActions>
               </Dialog>
-
-              <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"} }} role="presentation" variant="middle" light={true}>
-                  <Typography>Registered</Typography>
-              </Divider>
-              {/* insert the registered courses here */}
-              <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
-              
-              <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"} }} role="presentation" variant="middle" light={true}>
-                  <Typography>Wishlist</Typography>
-              </Divider>
-              {/* insert the wishlist courses here */}
-              <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
+              <Box m={2}>
+                <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
+                    <Typography sx={{fontWeight:'bold'}}>Registered</Typography>
+                </Divider>
+                {/* insert the registered courses here */}
+                <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
+                
+                <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
+                    <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
+                </Divider>
+                {/* insert the wishlist courses here */}
+                <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
+              </Box>
 
               <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
                 <Button variant="contained" color="primary" onClick={this.onSignOut} >
@@ -261,7 +263,19 @@ class Home extends Component {
                 </Button>
               </Box>
 
+              <Box sx={{
+                    width: '100%',
+                    position: 'fixed',
+                    bottom: 0,
+                    '@media (min-width: 600px)': {
+                      width: '600px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                    }}}>
+                <LabelBottomNavigation />
+              </Box>
             </Box>
+            
           ) : (
             <GuestHomePage href={cognitoUtils.getCognitoSignInUri()} />
           )}
