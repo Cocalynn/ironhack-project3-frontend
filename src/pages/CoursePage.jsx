@@ -136,7 +136,7 @@ const CoursePage = () => {
                   <hr />
                   <Card.Body className="d-flex justify-content-between align-items-center bg-light">
                     {/* Show review form only if the course is completed */}
-                    <Button as={Link} to={`/courses/add-chapter/${courseId}`}>
+                    <Button as={Link} to={`/add-chapter/${courseId}`}>
                       Add Chapter
                     </Button>
                     {isCourseCompleted ? (
@@ -167,6 +167,7 @@ const CoursePage = () => {
                 </Card>
               )}
               <Reviews reviews={reviews} />
+              <CourseProgress courseId={courseId} />
             </Col>
           </Row>
           <Row>
@@ -186,9 +187,6 @@ const CoursePage = () => {
                 </Card.Body>
               </Card>
             ))}
-          </Row>
-          <Row>
-            <CourseProgress courseId={courseId} />
           </Row>
         </>
       )}
