@@ -51,7 +51,6 @@ const theme = createTheme({
 const App = () => (
   <ThemeProvider theme={theme}>
     <Router history={history}>
-      {/* <NavBar /> */}
       <Route exact path="/" component={Home} />
       <Route exact path="/callback" component={Callback} />
       <Route exact path="/courses" component={AllCoursesPage} />

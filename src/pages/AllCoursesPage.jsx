@@ -4,6 +4,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Spinner } from "react-bootstrap";
 import CourseSearch from "../components/CourseSearch";
+import FootBar from '../components/FootBar';
+
 
 const API_URL = "http://localhost:3010";
 
@@ -54,6 +56,7 @@ const AllCoursesPage = () => {
           </div>
         ))}
       </div>
+      <FootBar />
     </div>
   );
 };

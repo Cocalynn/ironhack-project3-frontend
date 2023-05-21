@@ -31,7 +31,8 @@ class Home extends Component {
       nickname: null, 
       newNickName:"",
       openDialog: false,
-
+      registeredCourses: [],
+      wishlistCourses: []
      }
   }
 
@@ -72,11 +73,32 @@ class Home extends Component {
         }
       }
 
+      // Get user nickname and profile picture
       axios.get(`${appConfig.apiUri}/user`, config)
         .then((response) => {
           this.setState({ userProfilePic: `${appConfig.apiUri}/${response.data.path}` })
           console.log(response.data)
           this.setState({ nickname: response.data.nickname })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      // Get user registered courses
+      axios.get(`${appConfig.apiUri}/user/registered-courses`, config)
+        .then((response) => {
+          console.log(response.data)
+          this.setState({ registeredCourses: response.data })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      // Get user wishlist courses
+      axios.get(`${appConfig.apiUri}/user/wishlist-courses`, config)
+        .then((response) => {
+          console.log(response.data)
+          this.setState({ wishlistCourses: response.data })
         })
         .catch((error) => {
           console.log(error)
@@ -247,13 +269,33 @@ class Home extends Component {
                 <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
                     <Typography sx={{fontWeight:'bold'}}>Registered</Typography>
                 </Divider>
-                {/* insert the registered courses here */}
+
+                {this.state.registeredCourses.length > 0 ? (
+                  this.state.registeredCourses.map((course, index) => (
+                    <RegisteredCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} progress={course.progress} />
+                  ))
+                ) : (
+                  <Typography variant="body1" textAlign="center">
+                    No registered courses
+                  </Typography>
+                )}
+
                 <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
                 
                 <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
                     <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
                 </Divider>
-                {/* insert the wishlist courses here */}
+
+                {this.state.wishlistCourses.length > 0 ? (
+                  this.state.wishlistCourses.map((course, index) => (
+                    <WishlistCourseCard key={index} title={course.title} lecturer={course.lecturer} image={course.courseImage} price={course.price} />
+                  ))
+                ) : (
+                  <Typography variant="body1" textAlign="center">
+                    No wishlist courses
+                  </Typography>
+                )}
+
                 <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
               </Box>
 
