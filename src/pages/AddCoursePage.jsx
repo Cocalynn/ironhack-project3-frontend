@@ -73,8 +73,8 @@ const AddCoursePage = () => {
     try {
       const response = await axios.post(
         `${appConfig.apiUri}/api/courses`,
-        config,
-        course
+        course,
+        config
       );
       console.log(response.data);
       setShowAlert(true);

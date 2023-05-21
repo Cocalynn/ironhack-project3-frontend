@@ -32,7 +32,7 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
 
     // Send the review data to the backend API
     axios
-      .post(`${appConfig.apiUri}/api/reviews`, config, review)
+      .post(`${appConfig.apiUri}/api/reviews`, review, config)
       .then((response) => {
         // Review successfully submitted
         // You can add any additional logic here, such as displaying a success message

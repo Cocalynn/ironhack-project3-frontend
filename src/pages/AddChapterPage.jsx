@@ -31,8 +31,8 @@ const AddChapterForm = () => {
       // Add the chapter to the course by making a POST request to the server
       await axios.post(
         `${appConfig.apiUri}/api/courses/${courseId}/chapters`,
-        config,
-        chapterData
+        chapterData,
+        config
       );
       // Clear the form fields
       setChapterData({
