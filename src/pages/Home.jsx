@@ -32,7 +32,10 @@ class Home extends Component {
       newNickName:"",
       openDialog: false,
       registeredCourses: [],
-      wishlistCourses: []
+      wishlistCourses: [],
+      lecturers: ["DiogoBarros", "DanielCalvente", "JaimeLaureano"],
+      currentLecturer: null,
+      uploadedCourses: [],
      }
   }
 
@@ -105,6 +108,18 @@ class Home extends Component {
         .catch((error) => {
           console.log(error)
         })
+
+      // get lecturer information
+      axios.get(`${appConfig.apiUri}/lecturer`, config)
+        .then((response) => {
+          console.log(response.data)
+          this.setState({ currentLecturer: response.data })
+          this.setState({ uploadedCourses: this.state.currentLecturer.courses })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
     }
   }
 
@@ -120,7 +135,6 @@ class Home extends Component {
   closeNicknameDialog = () => {
     this.setState({ openDialog: false });
   };  
-
 
   handleNicknameChange = (e) => {
     this.setState({ newNickname: e.target.value });
@@ -148,7 +162,6 @@ class Home extends Component {
       });
       this.setState({ openDialog: false });
   }
-  
 
 
   handleFileChange = (e) => {
@@ -179,7 +192,6 @@ class Home extends Component {
         console.log(error);
       });
   };
-
 
   openFilePicker = () => {
     document.getElementById('filePicker').click();
@@ -270,6 +282,7 @@ class Home extends Component {
                   </Button>
                 </DialogActions>
               </Dialog>
+              { !this.state.lecturers.includes(this.props.session.user.userName) ? (
               <Box m={2}>
                 <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
                     <Typography sx={{fontWeight:'bold'}}>Registered</Typography>
@@ -289,7 +302,6 @@ class Home extends Component {
                     <Typography sx={{fontWeight:'bold'}}>Wishlist</Typography>
                 </Divider>
 
-
                 {this.state.wishlistCourses.length > 0 ? (
                   this.state.wishlistCourses.map((course, index) => (
                     <WishlistCourseCard key={index} title={course.name} lecturer={course.lecturer.name} image={course.courseImage} price={course.price} />
@@ -299,7 +311,24 @@ class Home extends Component {
                     No wishlist courses
                   </Typography>
                 )}
-              </Box>
+              </Box>) : (
+                <Box m={2}>
+                  <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"}}} role="presentation" variant="middle" light={true}>
+                      <Typography sx={{fontWeight:'bold'}}>Courses Uploaded</Typography>
+                  </Divider>
+
+                  { this.state.uploadedCourses.length > 0 ? (
+                    this.state.uploadedCourses.map((course, index) => (
+                      <WishlistCourseCard key={index} title={course.name} lecturer={this.state.currentLecturer.name} image={course.courseImage} price={course.price} />
+                    )
+                    )):(
+                      <Typography variant="body1" textAlign="center">
+                        No courses uploaded
+                      </Typography>
+                    )}
+                </Box>
+              )
+            }
 
               <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
                 <Button variant="contained" color="primary" onClick={this.onSignOut} >

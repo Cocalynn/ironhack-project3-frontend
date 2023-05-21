@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 export default function FootBar() {
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
-  const lecturers = ["Diogo", "Dani", "Jaime"] // Hardcoding now, may be updated later
+  const lecturers = ["DiogoBarros", "DanielCalvente", "JaimeLaureano"] 
 
   // get current user and check if he is a lecturer
   const [isLecturer, setIsLecturer] = React.useState(false);
@@ -32,7 +32,7 @@ export default function FootBar() {
 
   axios.get(`${appConfig.apiUri}/user`, config)
     .then((response) => {
-      if (lecturers.includes(response.data.name)) {
+      if (lecturers.includes(response.data.username)) {
         setIsLecturer(true);
       }
     })
