@@ -1,14 +1,11 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
-import GuestHomePage from "./pages/GuestHomePage";
 import Callback from "./pages/Callback";
 import Home from "./pages/Home";
 import AddCoursePage from "./pages/AddCoursePage";
 import AllCoursesPage from "./pages/AllCoursesPage";
 import CoursePage from "./pages/CoursePage";
 import LecturerPage from "./pages/LecturerPage";
-import NavBar from "./components/NavBar";
-import BottomNavigation from "./components/BottomNavigation";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
 import { createTheme, ThemeProvider } from '@mui/material';

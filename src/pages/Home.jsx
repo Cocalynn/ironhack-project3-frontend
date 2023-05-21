@@ -7,7 +7,7 @@ import appConfig from '../config/app-config.json'
 import GuestHomePage from "./GuestHomePage";
 import RegisteredCourseCard from '../components/RegisteredCourseCard';
 import WishlistCourseCard from '../components/WishlistCourseCard';
-import { Card, CardContent, Typography, Grid, Avatar, Button, ListItem, List, ListItemText, ListItemAvatar, Box, Divider } from '@mui/material';
+import { Typography, Avatar, Button, Box, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import Dialog from '@mui/material/Dialog';
