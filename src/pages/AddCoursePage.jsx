@@ -14,10 +14,18 @@ import {
 import formHeader from "../assets/images/form-header.png";
 import CreatableSelect from "react-select/creatable";
 import axios from "axios";
-
-const API_URL = "http://localhost:3010";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const AddCoursePage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const navigate = useHistory();
   const [lecturers, setLecturers] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
@@ -47,7 +55,10 @@ const AddCoursePage = () => {
   useEffect(() => {
     const fetchLecturers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/lecturers`);
+        const response = await axios.get(
+          `${appConfig.apiUri}/api/lecturers`,
+          config
+        );
         setLecturers(response.data);
       } catch (error) {
         console.error("Error fetching lecturers", error);
@@ -60,7 +71,11 @@ const AddCoursePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/api/courses`, course);
+      const response = await axios.post(
+        `${appConfig.apiUri}/api/courses`,
+        config,
+        course
+      );
       console.log(response.data);
       setShowAlert(true);
       setTimeout(() => {

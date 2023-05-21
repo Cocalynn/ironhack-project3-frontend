@@ -4,10 +4,18 @@ import VideoPlayer from "../components/VideoPlayer";
 import { useParams, Link } from "react-router-dom";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { FiArrowLeftCircle } from "react-icons/fi";
-
-const API_URL = "http://localhost:3010";
+import { useSelector } from "react-redux";
+import appConfig from "../config/app-config.json";
 
 const ChapterPage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const { chapterId } = useParams();
   console.log("chapterId:", chapterId);
   const [chapter, setChapter] = useState(null);
@@ -15,13 +23,17 @@ const ChapterPage = () => {
 
   useEffect(() => {
     const fetchChapter = async () => {
-      const response = await axios.get(`${API_URL}/api/chapters/${chapterId}`);
+      const response = await axios.get(
+        `${appConfig.apiUri}/api/chapters/${chapterId}`,
+        config
+      );
       console.log("Response data:", response.data);
       setChapter(response.data);
 
       // Fetch the course information to get all chapters
       const courseResponse = await axios.get(
-        `${API_URL}/api/courses/${response.data.course}`
+        `${appConfig.apiUri}/api/courses/${response.data.course}`,
+        config
       );
       setCourse(courseResponse.data);
     };

@@ -2,9 +2,17 @@ import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button } from "react-bootstrap";
-const API_URL = "http://localhost:3010";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const AddChapterForm = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
   const { courseId } = useParams();
   const [chapterData, setChapterData] = useState({
     name: "",
@@ -22,7 +30,8 @@ const AddChapterForm = () => {
     try {
       // Add the chapter to the course by making a POST request to the server
       await axios.post(
-        `${API_URL}/api/courses/${courseId}/chapters`,
+        `${appConfig.apiUri}/api/courses/${courseId}/chapters`,
+        config,
         chapterData
       );
       // Clear the form fields

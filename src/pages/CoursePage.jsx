@@ -7,11 +7,19 @@ import defaultProfileImg from "../assets/images/default-profile-img.png";
 import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Card, Image, Row, Col, Button } from "react-bootstrap";
-
-const API_URL = "http://localhost:3010";
+import { Card, Image, Row, Col, Button, Badge } from "react-bootstrap";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const CoursePage = () => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const [course, setCourse] = useState(null);
   const [lecturer, setLecturer] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -30,13 +38,16 @@ const CoursePage = () => {
 
   const getCourse = () => {
     axios
-      .get(`${API_URL}/api/courses/${courseId}`)
+      .get(`${appConfig.apiUri}/api/courses/${courseId}`, config)
       .then((response) => {
         const oneCourse = response.data;
         setCourse(oneCourse);
 
         axios
-          .get(`${API_URL}/api/lecturers/${oneCourse.lecturer}`)
+          .get(
+            `${appConfig.apiUri}/api/lecturers/${oneCourse.lecturer}`,
+            config
+          )
           .then((lecturerResponse) => {
             const lecturerData = lecturerResponse.data;
             setLecturer(lecturerData);
@@ -44,7 +55,7 @@ const CoursePage = () => {
           .catch((error) => console.log(error));
 
         axios
-          .get(`${API_URL}/api/reviews/course/${courseId}`)
+          .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
           .then((reviewResponse) => {
             const reviewData = reviewResponse.data;
             setReviews(reviewData);
@@ -63,18 +74,22 @@ const CoursePage = () => {
   // Checkout
   const checkout = () => {
     axios
-      .post(`${API_URL}/api/checkout`, { courseId }, {
-        headers: {
-          'Content-Type': 'application/json'
+      .post(
+        `${appConfig.apiUri}/api/checkout`,
+        { courseId },
+        {
+          headers: {
+            Authorization: `Bearer ${session.credentials.accessToken}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
+      )
       .then((response) => {
         console.log(response.data);
-        window.location.href = response.data.url
+        window.location.href = response.data.url;
       })
       .catch((error) => console.log(error));
   };
-
 
   return (
     <div className="container">
@@ -102,10 +117,9 @@ const CoursePage = () => {
                 </Card.Body>
               </Card>
               <div>
-                  <Button variant="primary" type="submit" onClick={checkout}>
-                    Checkout
-                  </Button>
-
+                <Button variant="primary" type="submit" onClick={checkout}>
+                  Checkout
+                </Button>
 
                 <Button variant="warning">Add to Wishlist</Button>
               </div>
@@ -167,7 +181,10 @@ const CoursePage = () => {
                 </Card>
               )}
               <Reviews reviews={reviews} />
-              <CourseProgress courseId={courseId} />
+              <CourseProgress
+                userId="646898e9594a6df48614c609"
+                courseId={courseId}
+              />
             </Col>
           </Row>
           <Row>

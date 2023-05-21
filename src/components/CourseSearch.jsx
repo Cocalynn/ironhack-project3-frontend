@@ -2,11 +2,19 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { InputGroup, FormControl, Button, Row, Col } from "react-bootstrap";
-
-const API_URL = "http://localhost:3010";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
 const CourseSearch = ({ setCourses }) => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
+
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (e) => {
@@ -14,7 +22,10 @@ const CourseSearch = ({ setCourses }) => {
     // Make a request to the server with the search term
     if (searchTerm !== "") {
       axios
-        .get(`${API_URL}/api/search`, { params: { term: searchTerm } })
+        .get(`${appConfig.apiUri}/api/search`, config, 
+        {
+          params: { term: searchTerm },
+        })
         .then((response) => {
           setCourses(response.data);
         })
@@ -22,7 +33,7 @@ const CourseSearch = ({ setCourses }) => {
     } else {
       // If search term is empty, fetch all courses again
       axios
-        .get(`${API_URL}/api/courses`)
+        .get(`${appConfig.apiUri}/api/courses`, config)
         .then((response) => {
           setCourses(response.data);
         })
@@ -34,7 +45,7 @@ const CourseSearch = ({ setCourses }) => {
     // Clear the search input and fetch all courses again
     setSearchTerm("");
     axios
-      .get(`${API_URL}/api/courses`)
+      .get(`${appConfig.apiUri}/api/courses`, config)
       .then((response) => {
         setCourses(response.data);
       })

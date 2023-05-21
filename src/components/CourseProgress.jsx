@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import axios from "axios";
-
-const API_URL = "http://localhost:5005";
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const CourseProgress = ({ userId, courseId }) => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/users/${userId}`)
+      .get(`${appConfig.apiUri}/user/${userId}`, config)
       .then((response) => {
         const userCourse = response.data.courses.find(
           (course) => course.course._id === courseId

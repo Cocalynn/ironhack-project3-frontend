@@ -2,10 +2,17 @@ import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import axios from "axios";
-
-const API_URL = 'http://localhost:3010'
+import appConfig from "../config/app-config.json";
+import { useSelector } from "react-redux";
 
 const ReviewForm = ({ courseId, toggleReviewForm }) => {
+  const session = useSelector((state) => state.session);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${session.credentials.accessToken}`,
+    },
+  };
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
@@ -25,7 +32,7 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
 
     // Send the review data to the backend API
     axios
-      .post(`${API_URL}/api/reviews`, review)
+      .post(`${appConfig.apiUri}/api/reviews`, config, review)
       .then((response) => {
         // Review successfully submitted
         // You can add any additional logic here, such as displaying a success message
