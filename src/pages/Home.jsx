@@ -330,8 +330,8 @@ class Home extends Component {
               )
             }
 
-              <Box display="flex" justifyContent='center' alignItems="center" mt={4}>
-                <Button variant="contained" color="primary" onClick={this.onSignOut} >
+              <Box display="flex" justifyContent='center' alignItems="center" mt={4} mb={10}>
+                <Button variant="contained" color="primary" onClick={this.onSignOut} pb={5}   sx={{ width: "80%", fontWeight: "bold", mb: 2 }} >
                   Sign out
                 </Button>
               </Box>

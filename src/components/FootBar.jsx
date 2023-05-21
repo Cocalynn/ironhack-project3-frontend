@@ -60,6 +60,11 @@ export default function FootBar() {
               label="Explore"
               value="Explore"
               icon={<ExploreIcon />}
+              sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+              }}
             />
 
             { !isLecturer && 
@@ -69,6 +74,11 @@ export default function FootBar() {
                 label="Learn"
                 value="Learn"
                 icon={<SchoolIcon />}
+                sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+                }}
               />
             }
 
@@ -79,6 +89,11 @@ export default function FootBar() {
                 label="Upload"
                 value="Upload"
                 icon={<CloudUploadIcon />}
+                sx={{
+                  '&:hover': {
+                    color: 'primary.main',  
+                  }
+                }}
               />
             }
 
@@ -88,6 +103,11 @@ export default function FootBar() {
               label="Profile"
               value="Profile"
               icon={<FaceIcon />}
+              sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+              }}
             />
 
           </BottomNavigation>

@@ -24,7 +24,15 @@ const GuestHomePage = (props) => {
       </Grid>
       <Grid item>
         <Box>
-          <Button disabled={false} variant="outlined" href={props.href}>
+          <Button disabled={false} variant="outlined" href={props.href}   sx={{
+              '&:hover': {
+                backgroundColor: 'primary.main',
+                color: 'text.primary',
+              },
+              '& .MuiTouchRipple-root': {
+                color: 'transparent',
+              },
+            }}>
             <strong> LOGIN / SIGNUP </strong>
           </Button>
         </Box>
