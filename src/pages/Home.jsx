@@ -7,7 +7,7 @@ import appConfig from '../config/app-config.json'
 import GuestHomePage from "./GuestHomePage";
 import RegisteredCourseCard from '../components/RegisteredCourseCard';
 import WishlistCourseCard from '../components/WishlistCourseCard';
-import { Card, CardContent, Typography, Grid, Avatar, Button, ListItem, List, ListItemText, ListItemAvatar, Box } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Avatar, Button, ListItem, List, ListItemText, ListItemAvatar, Box, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import Dialog from '@mui/material/Dialog';
@@ -243,12 +243,16 @@ class Home extends Component {
                 </DialogActions>
               </Dialog>
 
-              <hr></hr>
-              <p>Registered Courses</p>
+              <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"} }} role="presentation" variant="middle" light={true}>
+                  <Typography>Registered</Typography>
+              </Divider>
+              {/* insert the registered courses here */}
               <RegisteredCourseCard title='Web development' lecturer='Yinong' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZpZZ8Wt9_dLE9xQYlrJzNaVhJ-AaJgqPF6Q&usqp=CAU' progress={68} />
               
-              <hr></hr>
-              <p>Wishlist Courses</p>
+              <Divider sx={{ my: 2, color: 'primary.main', "&::before, &::after": {borderColor: "primary.main"} }} role="presentation" variant="middle" light={true}>
+                  <Typography>Wishlist</Typography>
+              </Divider>
+              {/* insert the wishlist courses here */}
               <WishlistCourseCard title='Modern Arts' lecturer='Wilkins' image='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6nos0hMV9Y62qTmHb1LO4kiWqsx0s4UsEqo-V8Fo7LxN1M7nMBgR_PiXEC607GLPCCHg&usqp=CAU' price={90} />
 
               <Box display="flex" justifyContent='center' alignItems="center" mt={4}>

@@ -26,10 +26,12 @@ const theme = createTheme({
     },
     background: {
       default: '#121212', // Background color
+      paper: '#1E1E1E', // Paper color
     },
     text: {
       primary: '#FFFFFF', // White text color for readability
       secondary: '#BDBDBD', // Light gray secondary text color
+
       
     },
   },

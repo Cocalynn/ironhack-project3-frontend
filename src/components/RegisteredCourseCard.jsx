@@ -26,11 +26,11 @@ function CircularProgressWithLabel(props) {
 function RegisteredCourseCard(props) {
   return (
     <Card>
-      <Box display="flex" border={1} borderColor="white" bgcolor="background.default">
-        <Box sx={{ width: '140px', height: '140px' }}>
+      <Box display="flex">
+        <Box sx={{ width: '140px', height: '140px', p:2 }}>
           <CardMedia
             component="img"
-            sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            sx={{ width: '100%', height: '100%', objectFit: 'cover', boxSizing: 'border-box' }}
             image={props.image}
             alt={props.title}
           />
