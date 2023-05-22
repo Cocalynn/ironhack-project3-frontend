@@ -72,8 +72,10 @@ const ChapterPage = () => {
         <FiArrowLeftCircle /> Back to Course
       </Button>
       <VideoPlayer
+        courseId={chapter.course}
         chapters={chapters}
-        currentChapterIndex={currentChapterIndex}
+        chapterId={chapterId}
+        initialChapterIndex={currentChapterIndex}
       />
     </Container>
   );
