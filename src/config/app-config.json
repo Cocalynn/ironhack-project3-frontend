@@ -3,13 +3,13 @@
     "userPool": "eu-west-2_73lbyeWNM",
     "userPoolBaseUri": "https://brainbounce.auth.eu-west-2.amazoncognito.com",
     "clientId": "3f2nplq1r76199v1gm7e037ck1",
-    "callbackUri": "http://localhost:3000/callback",
-    "signoutUri": "http://localhost:3000",
+    "callbackUri": "https://main--harmonious-starburst-2c594b.netlify.app/callback",
+    "signoutUri": "https://main--harmonious-starburst-2c594b.netlify.app",
     "tokenScopes": [
         "openid",
         "email",
         "profile",
-        "http://localhost:5005/hello-world.all"                
+        "https://adorable-bear-coat.cyclic.app/hello-world.all"                
     ],
-    "apiUri": "http://localhost:5005"
+    "apiUri": "https://adorable-bear-coat.cyclic.app"
 }
