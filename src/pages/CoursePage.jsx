@@ -25,8 +25,6 @@ import { useSelector } from "react-redux";
 const CoursePage = () => {
   const session = useSelector((state) => state.session);
 
-  console.log("SSSSession", session);
-
   const config = {
     headers: {
       Authorization: `Bearer ${session.credentials.accessToken}`,
@@ -36,6 +34,7 @@ const CoursePage = () => {
   const [course, setCourse] = useState(null);
   const [user, setUser] = useState(null);
   const [lecturer, setLecturer] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
@@ -92,8 +91,15 @@ const CoursePage = () => {
           .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
           .then((reviewResponse) => {
             const reviewData = reviewResponse.data;
-            //console.log(reviewData);
             setReviews(reviewData);
+            if (reviewData.length > 0) {
+              const sum = reviewData.reduce(
+                (total, review) => total + review.rating,
+                0
+              );
+              const average = sum / reviewData.length;
+              setAverageRating(average);
+            }
           })
           .catch((error) => console.log(error));
       })
@@ -104,7 +110,18 @@ const CoursePage = () => {
     getCourse();
   }, []);
 
-  console.log(user);
+  const addToWishlist = () => {
+    axios
+      .post(
+        `${appConfig.apiUri}/user/wishlist`,
+        { courseId },
+        config
+      )
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
 
   // Checkout
   const checkout = () => {
@@ -150,6 +167,14 @@ const CoursePage = () => {
                 <Typography variant="h5" component="div">
                   {course.name}
                 </Typography>
+
+                <Typography variant="body2" color="text.secondary">
+                  {averageRating
+                    ? `Average Rating: ${averageRating.toFixed(
+                        1
+                      )} / Total ratings: ${reviews.length}`
+                    : "No ratings available yet"}
+                </Typography>
                 <Typography variant="body2" color="secondary">
                   {course.description}
                 </Typography>
@@ -160,15 +185,25 @@ const CoursePage = () => {
                 />
               </CardContent>
               <CardActions>
-                <Button variant="contained" color="primary" onClick={checkout}>
-                  Checkout
+                <Button
+                  style={{ marginRight: "10px" }}
+                  variant="contained"
+                  color="primary"
+                  component={RouterLink}
+                  to="/courses"
+                >
+                  All Courses
                 </Button>
                 <Button
                   variant="contained"
                   color="secondary"
                   startIcon={<FavoriteIcon />}
+                  onClick={addToWishlist}
                 >
-                  Add to Wishlist
+                  Wishlist
+                </Button>
+                <Button variant="contained" color="primary" onClick={checkout}>
+                  Checkout
                 </Button>
               </CardActions>
             </Card>
@@ -219,9 +254,7 @@ const CoursePage = () => {
                       </Button>
                     </Grid>
                   ) : (
-                    <Typography variant="body2">
-                      Finish the course to leave a review
-                    </Typography>
+                    <Typography variant="body2"> </Typography>
                   )}
                 </CardContent>
                 {showReviewForm && (
@@ -240,7 +273,16 @@ const CoursePage = () => {
           <Grid container spacing={2}>
             {course.chapters.map((chapter, index) => (
               <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                <Card style={{ display: "flex", justifyContent: "center" }}>
+                <Card
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                    marginRight: "20px",
+                    marginLeft: "40px",
+                    marginBottom: "20px",
+                  }}
+                >
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                       Chapter {index + 1}: {chapter.name}

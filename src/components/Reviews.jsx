@@ -14,7 +14,7 @@ const StyledRating = styled(Rating)({
 
 const Reviews = ({ reviews }) => (
   <Grid container spacing={2}>
-    {reviews.slice(0, 5).map((review, index) => (
+    {reviews.slice(0, 3).map((review, index) => (
       <Grid item xs={12} key={index}>
         <Card
           sx={{ marginTop: 2 }}
