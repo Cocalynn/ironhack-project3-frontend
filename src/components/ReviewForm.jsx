@@ -5,7 +5,7 @@ import axios from "axios";
 import appConfig from "../config/app-config.json";
 import { useSelector } from "react-redux";
 
-const ReviewForm = ({ courseId, toggleReviewForm }) => {
+const ReviewForm = ({ courseId, toggleReviewForm, user }) => {
   const session = useSelector((state) => state.session);
 
   const config = {
@@ -16,6 +16,8 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
 
+  console.log("user is:", { user });
+
   const handleRatingChange = (selectedRating) => {
     setRating(selectedRating);
   };
@@ -25,10 +27,10 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
 
     // Create the review object
     const review = {
-      user: session.user.userName,
+      user: user,
       rating: rating,
       comment: comment,
-      courseId: courseId,
+      course: courseId,
     };
 
     // Send the review data to the backend API

@@ -25,7 +25,7 @@ import { useSelector } from "react-redux";
 const CoursePage = () => {
   const session = useSelector((state) => state.session);
 
-  console.log("SSSSession", session.user);
+  console.log("SSSSession", session);
 
   const config = {
     headers: {
@@ -34,6 +34,7 @@ const CoursePage = () => {
   };
 
   const [course, setCourse] = useState(null);
+  const [user, setUser] = useState(null);
   const [lecturer, setLecturer] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
@@ -68,6 +69,15 @@ const CoursePage = () => {
         setCourse(oneCourse);
 
         axios
+          .get(`${appConfig.apiUri}/user`, config)
+          .then((response) => {
+            const userData = response.data;
+            console.log("user is coursepage", userData);
+            setUser(userData);
+          })
+          .catch((error) => console.log(error));
+
+        axios
           .get(
             `${appConfig.apiUri}/api/lecturers/${oneCourse.lecturer}`,
             config
@@ -82,7 +92,7 @@ const CoursePage = () => {
           .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
           .then((reviewResponse) => {
             const reviewData = reviewResponse.data;
-            console.log(reviewData);
+            //console.log(reviewData);
             setReviews(reviewData);
           })
           .catch((error) => console.log(error));
@@ -93,6 +103,8 @@ const CoursePage = () => {
   useEffect(() => {
     getCourse();
   }, []);
+
+  console.log(user);
 
   // Checkout
   const checkout = () => {
@@ -222,7 +234,7 @@ const CoursePage = () => {
                 )}
               </Card>
             )}
-            <Reviews reviews={reviews} />
+            <Reviews user={user} reviews={reviews} />
             <CourseProgress courseId={courseId} />
           </Grid>
           <Grid container spacing={2}>
