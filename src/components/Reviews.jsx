@@ -1,33 +1,40 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { styled } from "@mui/system";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Rating from "@mui/material/Rating";
 
-const starFull = "★";
-const starEmpty = "☆";
-
-const generateStars = (rating) => {
-  let stars = "";
-  for (let i = 0; i < 5; i++) {
-    stars += i < rating ? starFull : starEmpty;
-  }
-  return stars;
-};
+const StyledRating = styled(Rating)({
+  "& .MuiRating-iconEmpty": {
+    color: "#919a9e",
+  },
+});
 
 const Reviews = ({ reviews }) => (
-  <div>
+  <Grid container spacing={2}>
     {reviews.slice(0, 5).map((review, index) => (
-      <Card key={index} style={{ marginTop: "10px" }}>
-        <Card.Body>
-          <Card.Text>
-            <div style={{ color: "#f4c150", fontSize: "1.2em" }}>
-              {generateStars(review.rating)}
-            </div>
-          </Card.Text>
-          <Card.Text>{review.comment}</Card.Text>
-          <Card.Footer>- {review.user.username || "Anonymous"}</Card.Footer>
-        </Card.Body>
-      </Card>
+      <Grid item xs={12} key={index}>
+        <Card
+          sx={{ marginTop: 2 }}
+          style={{ marginRight: "20px", marginLeft: "20px" }}
+        >
+          <CardContent>
+            <StyledRating name="read-only" value={review.rating} readOnly />
+            <Typography variant="body1">{review.comment}</Typography>
+            <Typography variant="body1" align="right">
+              -{" "}
+              {review.user.name ||
+                review.user.nickname ||
+                review.user.username ||
+                "Anonymous"}
+            </Typography>
+          </CardContent>
+        </Card>
+      </Grid>
     ))}
-  </div>
+  </Grid>
 );
 
 export default Reviews;

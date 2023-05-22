@@ -25,6 +25,7 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
 
     // Create the review object
     const review = {
+      user: session.user.userName,
       rating: rating,
       comment: comment,
       courseId: courseId,
@@ -34,20 +35,16 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
     axios
       .post(`${appConfig.apiUri}/api/reviews`, review, config)
       .then((response) => {
-        // Review successfully submitted
-        // You can add any additional logic here, such as displaying a success message
-        // or updating the course details to reflect the new review
         console.log("Review submitted:", response.data);
-        // Reset the form values
         setRating(0);
         setComment("");
-        // Hide the review form
         toggleReviewForm();
       })
       .catch((error) => {
-        // Error occurred while submitting the review
-        // You can handle the error here, display an error message, etc.
-        console.error("Error submitting review:", error);
+        console.error("Error submitting review:", error.message);
+        if (error.response) {
+          console.log("Error response from server:", error.response);
+        }
       });
   };
 

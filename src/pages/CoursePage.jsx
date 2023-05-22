@@ -25,6 +25,8 @@ import { useSelector } from "react-redux";
 const CoursePage = () => {
   const session = useSelector((state) => state.session);
 
+  console.log("SSSSession", session.user);
+
   const config = {
     headers: {
       Authorization: `Bearer ${session.credentials.accessToken}`,
@@ -80,6 +82,7 @@ const CoursePage = () => {
           .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
           .then((reviewResponse) => {
             const reviewData = reviewResponse.data;
+            console.log(reviewData);
             setReviews(reviewData);
           })
           .catch((error) => console.log(error));
@@ -220,10 +223,7 @@ const CoursePage = () => {
               </Card>
             )}
             <Reviews reviews={reviews} />
-            <CourseProgress
-              userId="646898e9594a6df48614c609"
-              courseId={courseId}
-            />
+            <CourseProgress courseId={courseId} />
           </Grid>
           <Grid container spacing={2}>
             {course.chapters.map((chapter, index) => (
