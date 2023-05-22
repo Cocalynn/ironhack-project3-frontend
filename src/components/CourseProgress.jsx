@@ -4,7 +4,7 @@ import axios from "axios";
 import appConfig from "../config/app-config.json";
 import { useSelector } from "react-redux";
 
-const CourseProgress = ({ userId, courseId }) => {
+const CourseProgress = ({ courseId }) => {
   const session = useSelector((state) => state.session);
 
   const config = {
@@ -14,12 +14,15 @@ const CourseProgress = ({ userId, courseId }) => {
   };
   const [progress, setProgress] = useState(0);
 
+  console.log(courseId);
+
   useEffect(() => {
     axios
-      .get(`${appConfig.apiUri}/user/${userId}`, config)
+      .get(`${appConfig.apiUri}/user/`, config)
       .then((response) => {
+        console.log("this is the response: ", response);
         const userCourse = response.data.courses.find(
-          (course) => course.course._id === courseId
+          (course) => course._id === courseId
         );
         if (userCourse) {
           // Calculate overall course progress
@@ -31,10 +34,10 @@ const CourseProgress = ({ userId, courseId }) => {
         }
       })
       .catch((error) => console.error(error));
-  }, [userId, courseId]);
+  }, [courseId]);
 
   return (
-    <div>
+    <div style={{ margin: "20px" }}>
       <h2>Course Progress</h2>
       <ProgressBar now={progress} label={`${progress.toFixed(1)}%`} />
     </div>
