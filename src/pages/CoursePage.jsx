@@ -37,6 +37,7 @@ const CoursePage = () => {
   const [averageRating, setAverageRating] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
   const toggleReviewForm = () => {
     setShowReviewForm(!showReviewForm);
@@ -73,6 +74,7 @@ const CoursePage = () => {
             const userData = response.data;
             console.log("user is coursepage", userData);
             setUser(userData);
+            fetchWishlist();
           })
           .catch((error) => console.log(error));
 
@@ -110,17 +112,56 @@ const CoursePage = () => {
     getCourse();
   }, []);
 
-  const addToWishlist = () => {
+  console.log("Do i have this course in the wishlist?: ", isInWishlist);
+
+  const fetchWishlist = () => {
     axios
-      .post(
-        `${appConfig.apiUri}/user/wishlist`,
-        { courseId },
-        config
-      )
+      .get(`${appConfig.apiUri}/user/wishlist-courses`, config)
       .then((response) => {
-        console.log(response.data);
+        const wishlist = response.data;
+        console.log("what's inside wishlist?: ", wishlist);
+        if (wishlist.includes(courseId)) {
+          setIsInWishlist(true);
+        } else {
+          setIsInWishlist(false);
+        }
       })
       .catch((error) => console.log(error));
+  };
+
+  const handleWishlist = () => {
+    if (isInWishlist) {
+      removeFromWishlist();
+    } else {
+      addToWishlist();
+    }
+  };
+
+  const addToWishlist = () => {
+    axios
+      .post(`${appConfig.apiUri}/user/wishlist`, { courseId }, config)
+      .then((response) => {
+        console.log(response.data);
+        fetchWishlist();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const removeFromWishlist = () => {
+    axios
+      .delete(`${appConfig.apiUri}/user/wishlist`, {
+        data: { courseId },
+        ...config,
+      })
+      .then((response) => {
+        console.log(response.data);
+        fetchWishlist();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   // Checkout
@@ -196,11 +237,11 @@ const CoursePage = () => {
                 </Button>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color={isInWishlist ? "primary" : "secondary"}
                   startIcon={<FavoriteIcon />}
-                  onClick={addToWishlist}
+                  onClick={handleWishlist}
                 >
-                  Wishlist
+                  {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
                 </Button>
                 <Button variant="contained" color="primary" onClick={checkout}>
                   Checkout
