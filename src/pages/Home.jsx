@@ -18,7 +18,7 @@ import TextField from '@mui/material/TextField';
 import FootBar from '../components/FootBar';
 
 const mapStateToProps = state => {
-  return { session: state.session }
+  return { session: JSON.parse(localStorage.getItem('session')) }
 }
 
 class Home extends Component {
@@ -40,7 +40,7 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    if (this.props.session.isLoggedIn) {
+    if (this.props.session) {
       // Call the API server GET /auth endpoint with our JWT access token
       // get user information from API server
       const option1 = {
@@ -204,7 +204,7 @@ class Home extends Component {
     return (
       <div className="Home">
         <header className="Home-header">
-          { this.props.session.isLoggedIn ? (
+          { this.props.session ? (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop:'60px' }}>
                 <Box sx={{ position: 'relative' }}>

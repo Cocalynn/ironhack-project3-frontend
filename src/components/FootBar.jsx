@@ -12,10 +12,30 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import appConfig from '../config/app-config.json';
 import { useSelector } from "react-redux";
+import { setSession } from '../actions/session';
+import { useEffect } from 'react';
 
 
 
 export default function FootBar() {
+
+  //const session = JSON.parse(localStorage.getItem('session'));
+
+  const session = JSON.parse(localStorage.getItem('session'));
+
+
+  // testing
+  useEffect(() => {
+
+    if (!session.credentials) {
+      console.error('Session credentials are not set');
+    } else if (!session.credentials.accessToken) {
+      console.error('Access token is not set in session credentials');
+    } else {
+      // Existing axios request code...
+    }
+  }, []);
+  
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
   const lecturers = ["DiogoBarros", "DanielCalvente", "JaimeLaureano"] 
@@ -23,22 +43,26 @@ export default function FootBar() {
   // get current user and check if he is a lecturer
   const [isLecturer, setIsLecturer] = React.useState(false);
 
-  const session = useSelector((state) => state.session);
+
+
+
   const config = {
     headers: {
       Authorization: `Bearer ${session.credentials.accessToken}`
     }
   }
 
-  axios.get(`${appConfig.apiUri}/user`, config)
-    .then((response) => {
-      if (lecturers.includes(response.data.username)) {
-        setIsLecturer(true);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  useEffect(() => {
+    axios.get(`${appConfig.apiUri}/user`, config)
+      .then((response) => {
+        if (lecturers.includes(response.data.username)) {
+          setIsLecturer(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
 
 

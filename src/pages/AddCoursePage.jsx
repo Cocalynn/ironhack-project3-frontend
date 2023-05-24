@@ -22,7 +22,7 @@ import { Alert } from "@mui/material";
 import formHeader from "../assets/images/form-header.png";
 
 const AddCoursePage = () => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
 
   const config = {
     headers: {
