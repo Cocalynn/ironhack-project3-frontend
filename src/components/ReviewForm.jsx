@@ -3,10 +3,11 @@ import { Form, Button } from "react-bootstrap";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import axios from "axios";
 import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
 
-const ReviewForm = ({ courseId, toggleReviewForm }) => {
+
+const ReviewForm = ({ courseId, toggleReviewForm, user }) => {
   const session = JSON.parse(localStorage.getItem('session'));
+
 
   const config = {
     headers: {
@@ -15,6 +16,8 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
   };
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+
+  console.log("user is:", { user });
 
   const handleRatingChange = (selectedRating) => {
     setRating(selectedRating);
@@ -25,29 +28,39 @@ const ReviewForm = ({ courseId, toggleReviewForm }) => {
 
     // Create the review object
     const review = {
+      user: user,
       rating: rating,
       comment: comment,
-      courseId: courseId,
+      course: courseId,
     };
 
-    // Send the review data to the backend API
+    // First, check if the user has already submitted a review for this course
     axios
-      .post(`${appConfig.apiUri}/api/reviews`, review, config)
+      .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
       .then((response) => {
-        // Review successfully submitted
-        // You can add any additional logic here, such as displaying a success message
-        // or updating the course details to reflect the new review
-        console.log("Review submitted:", response.data);
-        // Reset the form values
-        setRating(0);
-        setComment("");
-        // Hide the review form
-        toggleReviewForm();
+        if (response.data.length > 0) {
+          // If user has already reviewed this course, stop the function execution
+          console.error("User has already left a review for this course");
+        } else {
+          // If user has not reviewed this course, then proceed with submitting the review
+          axios
+            .post(`${appConfig.apiUri}/api/reviews`, review, config)
+            .then((response) => {
+              console.log("Review submitted:", response.data);
+              setRating(0);
+              setComment("");
+              toggleReviewForm();
+            })
+            .catch((error) => {
+              console.error("Error submitting review:", error.message);
+              if (error.response) {
+                console.log("Error response from server:", error.response);
+              }
+            });
+        }
       })
       .catch((error) => {
-        // Error occurred while submitting the review
-        // You can handle the error here, display an error message, etc.
-        console.error("Error submitting review:", error);
+        console.error("Error fetching reviews:", error.message);
       });
   };
 

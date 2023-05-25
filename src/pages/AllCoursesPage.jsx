@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 import appConfig from "../config/app-config.json";
 import CourseSearch from "../components/CourseSearch";
 import FootBar from "../components/FootBar";
+import Box from '@mui/material/Box';
 import {
   Button,
-  Box,
   Grid,
   Card,
   CardContent,

@@ -1,12 +1,44 @@
-import { useParams } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { makeStyles } from "@material-ui/core/styles";
+import Box from "@mui/material/Box";
+import {
+  TextField,
+  Button,
+  Container,
+  Typography,
+  CardMedia,
+} from "@material-ui/core";
+import addChapterImage from "../assets/images/new-chapter-img.jpeg";
 import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    marginTop: theme.spacing(2),
+    display: "flex",
+    flexDirection: "column",
+    gap: "1em",
+  },
+  button: {
+    marginTop: theme.spacing(2),
+  },
+  input: {
+    color: "#ffffff",
+  },
+  label: {
+    color: "#ffffff",
+    "&.Mui-focused": {
+      color: "#ffffff",
+    },
+  },
+}));
 
 const AddChapterForm = () => {
+
+  const classes = useStyles();
   const session = JSON.parse(localStorage.getItem('session'));
+
 
   const config = {
     headers: {
@@ -21,20 +53,20 @@ const AddChapterForm = () => {
   });
 
   const handleChange = (event) => {
-    setChapterData({ ...chapterData, [event.target.name]: event.target.value });
+    setChapterData({
+      ...chapterData,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("courseId: ", courseId);
     try {
-      // Add the chapter to the course by making a POST request to the server
       await axios.post(
         `${appConfig.apiUri}/api/courses/${courseId}/chapters`,
         chapterData,
         config
       );
-      // Clear the form fields
       setChapterData({
         name: "",
         description: "",
@@ -46,42 +78,79 @@ const AddChapterForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="chapterName">
-        <Form.Label>Chapter Name</Form.Label>
-        <Form.Control
-          type="text"
-          name="name"
-          value={chapterData.name}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <Form.Group controlId="chapterDescription">
-        <Form.Label>Description</Form.Label>
-        <Form.Control
-          type="text"
-          name="description"
-          value={chapterData.description}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-      <Form.Group controlId="chapterLink">
-        <Form.Label>YouTube Video ID</Form.Label>
-        <Form.Control
-          type="text"
-          name="youtubeId"
-          value={chapterData.link}
-          onChange={handleChange}
-          required
-          placeholder="Enter the ID of the YouTube video (e.g., dQw4w9WgXcQ)"
-        />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Add Chapter
-      </Button>
-    </Form>
+    <>
+      <CardMedia
+        component={Box}
+        height="250"
+        image={addChapterImage}
+        alt="header"
+        style={{
+          height: 250,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography variant="h4" align="center">
+          Add Chapter
+        </Typography>
+      </CardMedia>
+
+      <Container maxWidth="sm">
+        <form className={classes.form} onSubmit={handleSubmit}>
+          <TextField
+            InputProps={{
+              className: classes.input,
+            }}
+            InputLabelProps={{
+              className: classes.label,
+            }}
+            label="Chapter Name"
+            name="name"
+            value={chapterData.name}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            InputProps={{
+              className: classes.input,
+            }}
+            InputLabelProps={{
+              className: classes.label,
+            }}
+            label="Description"
+            name="description"
+            multiline
+            minRows={4}
+            value={chapterData.description}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            InputProps={{
+              className: classes.input,
+            }}
+            InputLabelProps={{
+              className: classes.label,
+            }}
+            label="YouTube Video ID"
+            name="youtubeId"
+            value={chapterData.youtubeId}
+            onChange={handleChange}
+            required
+            placeholder="Enter the ID of the YouTube video (e.g., dQw4w9WgXcQ)"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            className={classes.button}
+          >
+            Add Chapter
+          </Button>
+        </form>
+      </Container>
+    </>
   );
 };
 
