@@ -6,7 +6,7 @@ import appConfig from "../config/app-config.json";
 import { useSelector } from "react-redux";
 
 const AddChapterForm = () => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
 
   const config = {
     headers: {

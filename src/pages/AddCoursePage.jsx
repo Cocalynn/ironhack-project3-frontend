@@ -20,9 +20,11 @@ import {
 } from "@mui/material";
 import { Alert } from "@mui/material";
 import formHeader from "../assets/images/form-header.png";
+import FootBar from '../components/FootBar';
+
 
 const AddCoursePage = () => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
 
   const config = {
     headers: {
@@ -212,6 +214,17 @@ const AddCoursePage = () => {
             </Form>
           </Grid>
         </Grid>
+      </Box>
+      <Box sx={{
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            '@media (min-width: 600px)': {
+              width: '600px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}}>
+        <FootBar />
       </Box>
     </Container>
   );

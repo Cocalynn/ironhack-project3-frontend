@@ -20,3 +20,12 @@ export const setSession = session => ({
   type: SET_SESSION,
   session
 })
+
+// Load the Cognito sesson from local storage
+export const loadUserSession = () => {
+  const session = cognitoUtils.loadCognitoSession();
+  return {
+    type: SET_SESSION,
+    session: session?.user || null
+  };
+};

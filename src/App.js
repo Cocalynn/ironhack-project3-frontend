@@ -8,6 +8,7 @@ import CoursePage from "./pages/CoursePage";
 import LecturerPage from "./pages/LecturerPage";
 import AddChapterPage from "./pages/AddChapterPage";
 import ChapterPage from "./pages/ChapterPage";
+import LearnPage from "./pages/LearnPage";
 import { createTheme, ThemeProvider } from '@mui/material';
 
 
@@ -55,6 +56,7 @@ const App = () => (
       <Route exact path="/callback" component={Callback} />
       <Route exact path="/add-course" component={AddCoursePage} />
       <Route exact path="/courses" component={AllCoursesPage} />
+      <Route exact path="/learn-courses" component={LearnPage} />
       <Route exact path="/courses/:courseId" component={CoursePage} />
       <Route exact path="/add-chapter/:courseId" component={AddChapterPage} />
       <Route exact path="/lecturers/:lecturerId" component={LecturerPage} />

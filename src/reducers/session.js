@@ -1,15 +1,18 @@
 import { CLEAR_SESSION, SET_SESSION } from '../constants/actionTypes'
 
 const initialState = {
-  isLoggedIn: false
+  isLoggedIn: false,
+  user: null
 }
 
 const session = (state = initialState, action) => {
   switch (action.type) {
     case SET_SESSION:
-      return Object.assign({},
-        action.session,
-        { isLoggedIn: true })
+      return {
+        ...state,
+        user: action.session,
+        isLoggedIn: !!action.session
+      }
 
     case CLEAR_SESSION:
       return initialState

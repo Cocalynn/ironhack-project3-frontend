@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
 const CourseSearch = ({ setCourses }) => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
 
   const config = {
     headers: {

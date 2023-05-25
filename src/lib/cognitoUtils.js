@@ -78,15 +78,26 @@ const getCognitoSession = () => {
           email: result.idToken.payload.email
         }
       }
+      localStorage.setItem('session', JSON.stringify(session)); // store session in localStorage
       resolve(session)
     })
   })
+}
+
+// Load session from localStorage
+const loadCognitoSession = () => {
+  const sessionData = localStorage.getItem('session');
+  if (!sessionData) {
+    return null;
+  }
+  return JSON.parse(sessionData);
 }
 
 // Sign out of the current session (will redirect to signout URI)
 const signOutCognitoSession = () => {
   const auth = createCognitoAuth()
   auth.signOut()
+  localStorage.removeItem('session'); // clear session from localStorage on sign out
 }
 
 export default {
@@ -94,6 +105,7 @@ export default {
   createCognitoUser,
   createCognitoUserPool,
   getCognitoSession,
+  loadCognitoSession,
   getCognitoSignInUri,
   parseCognitoWebResponse,
   signOutCognitoSession
