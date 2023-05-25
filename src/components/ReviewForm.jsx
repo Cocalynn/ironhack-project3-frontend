@@ -3,10 +3,11 @@ import { Form, Button } from "react-bootstrap";
 import { BsStarFill, BsStar } from "react-icons/bs";
 import axios from "axios";
 import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
+
 
 const ReviewForm = ({ courseId, toggleReviewForm, user }) => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
+
 
   const config = {
     headers: {

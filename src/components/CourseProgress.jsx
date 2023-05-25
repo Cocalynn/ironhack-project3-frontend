@@ -1,17 +1,12 @@
 import React from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
+
 const CourseProgress = ({ totalChapters, watchedChapters }) => {
   const completedChapters =
     Object.values(watchedChapters).filter(Boolean).length;
   const progress =
     totalChapters > 0 ? (completedChapters / totalChapters) * 100 : 0;
-
-  console.log(
-    "these are the values from the props: ",
-    totalChapters,
-    completedChapters
-  );
 
   return (
     <div style={{ margin: "20px" }}>

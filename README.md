@@ -1,70 +1,102 @@
-# Getting Started with Create React App
+# BrainBounce 🧠
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Description
 
-In the project directory, you can run:
+Brainbounce is an online learning platform that democratizes education by making it accessible to everyone, everywhere, much like Udemy. It offers a wide variety of courses across diverse fields such as technology, business, arts, language, and personal development. Designed for self-paced learning, Brainbounce hosts expert-led courses that range from beginner to advanced levels. With Brainbounce, you can learn at your own rhythm, track your progress, and engage with instructors and peers. Whether you're seeking professional development or personal enrichment, Brainbounce provides the tools and resources you need to achieve your learning goals. 
 
-### `npm start`
+## MVP (DOM)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- User authentication and authorization
+  - Log in and sign up
+  - Google, Amazon anf Facebook log in option
+  - Email verification after signing up
+  - Forget password option
+  - Profile image and nick name personalization
+- For Lecturer: Upload new courses and chapters
+- For User: 
+  - Browse, buy and learn courses 
+  - Track course learning progress
+  - Add courses to wishlist
+- User-friendly and visually appealing interface
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Backlog
+- Personalized course recommendation based on tags and interests
 
-### `npm test`
+## Data Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+├── README.md
+├── package-lock.json
+├── package.json
+├── public
+│   ├── favicon.ico
+│   ├── index.html
+│   └── robots.txt
+└── src
+    ├── App.js
+    ├── actions
+    │   └── session.js
+    ├── assets
+    │   └── images
+    │       ├── bb-logo.png
+    │       ├── course-default-image.webp
+    │       ├── default-profile-img.png
+    │       └── form-header.png
+    ├── components
+    │   ├── CourseCard.jsx
+    │   ├── CourseProgress.jsx
+    │   ├── CourseSearch.jsx
+    │   ├── FootBar.jsx
+    │   ├── NavBar.jsx
+    │   ├── RegisteredCourseCard.jsx
+    │   ├── ReviewForm.jsx
+    │   ├── Reviews.jsx
+    │   ├── VideoPlayer.jsx
+    │   └── WishlistCourseCard.jsx
+    ├── config
+    │   └── app-config.json
+    ├── constants
+    │   └── actionTypes.js
+    ├── index.css
+    ├── index.js
+    ├── lib
+    │   └── cognitoUtils.js
+    ├── pages
+    │   ├── AddChapterPage.jsx
+    │   ├── AddCoursePage.jsx
+    │   ├── AllCoursesPage.jsx
+    │   ├── Callback.jsx
+    │   ├── ChapterPage.jsx
+    │   ├── CoursePage.jsx
+    │   ├── ErrorPage.jsx
+    │   ├── GuestHomePage.jsx
+    │   ├── Home.jsx
+    │   ├── LecturerPage.jsx
+    │   ├── UserProfile.jsx
+    │   └── test.jsx
+    ├── reducers
+    │   ├── index.js
+    │   └── session.js
+    └── store
+        └── index.js
 
-### `npm run build`
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Links
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Git
+URls for the project repo and deploy
 
-### `npm run eject`
+Frontend Repo: [https://github.com/Cocalynn/ironhack-project3-frontend](https://github.com/Cocalynn/ironhack-project3-frontend)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Frontend Deployment: [https://friendly-hare-pea-coat.cyclic.app/](https://main--harmonious-starburst-2c594b.netlify.app/)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Slides
+URls for the project presentation (slides)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+### Library resource: 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

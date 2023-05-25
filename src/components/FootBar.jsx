@@ -12,33 +12,57 @@ import {Link} from 'react-router-dom';
 import axios from 'axios';
 import appConfig from '../config/app-config.json';
 import { useSelector } from "react-redux";
+import { setSession } from '../actions/session';
+import { useEffect } from 'react';
 
 
 
 export default function FootBar() {
+
+  //const session = JSON.parse(localStorage.getItem('session'));
+
+  const session = JSON.parse(localStorage.getItem('session'));
+
+
+  // testing
+  useEffect(() => {
+
+    if (!session.credentials) {
+      console.error('Session credentials are not set');
+    } else if (!session.credentials.accessToken) {
+      console.error('Access token is not set in session credentials');
+    } else {
+      // Existing axios request code...
+    }
+  }, []);
+  
   const [value, setValue] = React.useState(0);
   const ref = React.useRef(null);
-  const lecturers = ["Diogo", "Dani", "Jaime"] // Hardcoding now, may be updated later
+  const lecturers = ["DiogoBarros", "DanielCalvente", "JaimeLaureano"] 
 
   // get current user and check if he is a lecturer
   const [isLecturer, setIsLecturer] = React.useState(false);
 
-  const session = useSelector((state) => state.session);
+
+
+
   const config = {
     headers: {
       Authorization: `Bearer ${session.credentials.accessToken}`
     }
   }
 
-  axios.get(`${appConfig.apiUri}/user`, config)
-    .then((response) => {
-      if (lecturers.includes(response.data.name)) {
-        setIsLecturer(true);
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  useEffect(() => {
+    axios.get(`${appConfig.apiUri}/user`, config)
+      .then((response) => {
+        if (lecturers.includes(response.data.username)) {
+          setIsLecturer(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
 
 
@@ -60,25 +84,40 @@ export default function FootBar() {
               label="Explore"
               value="Explore"
               icon={<ExploreIcon />}
+              sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+              }}
             />
 
             { !isLecturer && 
               <BottomNavigationAction
                 component={Link}
-                to="/learn" // To be updated to learn course
+                to="/learn-courses" // To be updated to learn course
                 label="Learn"
                 value="Learn"
                 icon={<SchoolIcon />}
+                sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+                }}
               />
             }
 
             { isLecturer &&
               <BottomNavigationAction
                 component={Link}
-                to="/" // To be updated to upload course
+                to="/add-course" // To be updated to upload course
                 label="Upload"
                 value="Upload"
                 icon={<CloudUploadIcon />}
+                sx={{
+                  '&:hover': {
+                    color: 'primary.main',  
+                  }
+                }}
               />
             }
 
@@ -88,6 +127,11 @@ export default function FootBar() {
               label="Profile"
               value="Profile"
               icon={<FaceIcon />}
+              sx={{
+                '&:hover': {
+                  color: 'primary.main',  
+                }
+              }}
             />
 
           </BottomNavigation>

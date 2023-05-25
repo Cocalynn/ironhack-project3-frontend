@@ -30,7 +30,7 @@ function RegisteredCourseCard(props) {
         <Box sx={{ width: '140px', height: '140px', p:2 }}>
           <CardMedia
             component="img"
-            sx={{ width: '100%', height: '100%', objectFit: 'cover', boxSizing: 'border-box' }}
+            sx={{ width: '100%', height: '100%', objectFit: 'fill', boxSizing: 'border-box' }}
             image={props.image}
             alt={props.title}
           />
@@ -41,7 +41,7 @@ function RegisteredCourseCard(props) {
               <strong>{props.title}</strong>
             </Typography>
             <Typography variant="subtitle2" color="text.secondary">
-              <strong>{props.lecturer}</strong>
+              By <strong>{props.lecturer}</strong>
             </Typography>
           </Box>
         </CardContent>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@mui/material/Box";
 import {
@@ -36,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddChapterForm = () => {
+
   const classes = useStyles();
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
+
 
   const config = {
     headers: {
