@@ -33,20 +33,33 @@ const ReviewForm = ({ courseId, toggleReviewForm, user }) => {
       course: courseId,
     };
 
-    // Send the review data to the backend API
+    // First, check if the user has already submitted a review for this course
     axios
-      .post(`${appConfig.apiUri}/api/reviews`, review, config)
+      .get(`${appConfig.apiUri}/api/reviews/courses/${courseId}`, config)
       .then((response) => {
-        console.log("Review submitted:", response.data);
-        setRating(0);
-        setComment("");
-        toggleReviewForm();
+        if (response.data.length > 0) {
+          // If user has already reviewed this course, stop the function execution
+          console.error("User has already left a review for this course");
+        } else {
+          // If user has not reviewed this course, then proceed with submitting the review
+          axios
+            .post(`${appConfig.apiUri}/api/reviews`, review, config)
+            .then((response) => {
+              console.log("Review submitted:", response.data);
+              setRating(0);
+              setComment("");
+              toggleReviewForm();
+            })
+            .catch((error) => {
+              console.error("Error submitting review:", error.message);
+              if (error.response) {
+                console.log("Error response from server:", error.response);
+              }
+            });
+        }
       })
       .catch((error) => {
-        console.error("Error submitting review:", error.message);
-        if (error.response) {
-          console.log("Error response from server:", error.response);
-        }
+        console.error("Error fetching reviews:", error.message);
       });
   };
 

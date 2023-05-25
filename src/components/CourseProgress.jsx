@@ -1,40 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
-import axios from "axios";
-import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
 
-const CourseProgress = ({ courseId }) => {
-  const session = useSelector((state) => state.session);
+const CourseProgress = ({ totalChapters, watchedChapters }) => {
+  const completedChapters =
+    Object.values(watchedChapters).filter(Boolean).length;
+  const progress =
+    totalChapters > 0 ? (completedChapters / totalChapters) * 100 : 0;
 
-  const config = {
-    headers: {
-      Authorization: `Bearer ${session.credentials.accessToken}`,
-    },
-  };
-  const [progress, setProgress] = useState(0);
-
-  console.log(courseId);
-
-  useEffect(() => {
-    axios
-      .get(`${appConfig.apiUri}/user/`, config)
-      .then((response) => {
-        console.log("this is the response: ", response);
-        const userCourse = response.data.courses.find(
-          (course) => course._id === courseId
-        );
-        if (userCourse) {
-          // Calculate overall course progress
-          const totalChapters = userCourse.chapters.length;
-          const completedChapters = userCourse.chapters.filter(
-            (chapter) => chapter.watched
-          ).length;
-          setProgress((completedChapters / totalChapters) * 100);
-        }
-      })
-      .catch((error) => console.error(error));
-  }, [courseId]);
+  console.log(
+    "these are the values from the props: ",
+    totalChapters,
+    completedChapters
+  );
 
   return (
     <div style={{ margin: "20px" }}>

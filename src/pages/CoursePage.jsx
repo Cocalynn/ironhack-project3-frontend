@@ -10,6 +10,8 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import ReplayCircleFilledRoundedIcon from "@mui/icons-material/ReplayCircleFilledRounded";
+import CircularProgress from "@mui/material/CircularProgress";
 import CardActions from "@mui/material/CardActions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
@@ -34,6 +36,7 @@ const CoursePage = () => {
     },
   };
 
+  const [loading, setLoading] = useState(true);
   const [course, setCourse] = useState(null);
   const [user, setUser] = useState(null);
   const [lecturer, setLecturer] = useState(null);
@@ -41,15 +44,11 @@ const CoursePage = () => {
   const [reviews, setReviews] = useState([]);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
+  const [watchedChapters, setWatchedChapters] = useState({});
 
   const toggleReviewForm = () => {
     setShowReviewForm(!showReviewForm);
   };
-
-  const isCourseCompleted =
-    course &&
-    (course.chapters.length === 0 ||
-      course.chapters.length === course.totalChapters);
 
   const { courseId } = useParams();
 
@@ -58,6 +57,7 @@ const CoursePage = () => {
   };
 
   const getCourse = () => {
+    setLoading(true);
     axios
       .get(`${appConfig.apiUri}/api/courses/${courseId}`, config)
       .then(async (response) => {
@@ -109,13 +109,37 @@ const CoursePage = () => {
           .catch((error) => console.log(error));
       })
       .catch((error) => console.log(error));
+
+    setLoading(false);
   };
 
   useEffect(() => {
     getCourse();
+    fetchWatchedChapters(courseId);
   }, []);
 
   console.log("Do i have this course in the wishlist?: ", isInWishlist);
+
+  const fetchWatchedChapters = (courseId) => {
+    axios
+      .get(`${appConfig.apiUri}/user`, config)
+      .then((response) => {
+        const watchedMap = {};
+        const userData = response.data;
+        console.log("this is the userData_ ", userData);
+        console.log("this is the courseId_ ", courseId);
+        const course = userData.courses.find(
+          (c) => c.course.toString() === courseId
+        );
+        if (course) {
+          course.chapters.forEach((chapter) => {
+            watchedMap[chapter.chapter.toString()] = chapter.watched;
+          });
+          setWatchedChapters(watchedMap);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
 
   const fetchWishlist = () => {
     axios
@@ -167,6 +191,9 @@ const CoursePage = () => {
       });
   };
 
+  console.log("chapters watched:", watchedChapters);
+  console.log("current course: ", course);
+
   // Checkout
   const checkout = () => {
     axios
@@ -186,6 +213,21 @@ const CoursePage = () => {
       })
       .catch((error) => console.log(error));
   };
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <Grid container spacing={3}>
@@ -287,19 +329,17 @@ const CoursePage = () => {
                     </Button>
                   </Grid>
 
-                  {isCourseCompleted ? (
-                    <Grid item xs={6}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={toggleReviewForm}
-                      >
-                        Leave a Review
-                      </Button>
-                    </Grid>
-                  ) : (
-                    <Typography variant="body2"> </Typography>
-                  )}
+                  <Grid item xs={6}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={toggleReviewForm}
+                    >
+                      Leave a Review
+                    </Button>
+                  </Grid>
+
+                  <Typography variant="body2"> </Typography>
                 </CardContent>
                 {showReviewForm && (
                   <CardContent>
@@ -312,7 +352,10 @@ const CoursePage = () => {
               </Card>
             )}
             <Reviews user={user} reviews={reviews} />
-            <CourseProgress courseId={courseId} />
+            <CourseProgress
+              totalChapters={course.chapters.length}
+              watchedChapters={watchedChapters}
+            />
           </Grid>
           <Grid container spacing={2}>
             {course.chapters.map((chapter, index) => (
@@ -334,15 +377,27 @@ const CoursePage = () => {
                     <hr />
                     <CardActions>
                       <Grid container justify="center">
-                        <Button
-                          size="small"
-                          variant="contained"
-                          color="primary"
-                          component={RouterLink}
-                          to={`/courses/${courseId}/chapters/${chapter._id}`}
-                        >
-                          <PlayCircleIcon /> Play Chapter
-                        </Button>
+                        {watchedChapters[chapter._id] ? (
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="secondary"
+                            component={RouterLink}
+                            to={`/courses/${courseId}/chapters/${chapter._id}`}
+                          >
+                            <ReplayCircleFilledRoundedIcon /> Re-Watch Chapter
+                          </Button>
+                        ) : (
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="primary"
+                            component={RouterLink}
+                            to={`/courses/${courseId}/chapters/${chapter._id}`}
+                          >
+                            <PlayCircleIcon /> Play Chapter
+                          </Button>
+                        )}
                       </Grid>
                     </CardActions>
                   </CardContent>
