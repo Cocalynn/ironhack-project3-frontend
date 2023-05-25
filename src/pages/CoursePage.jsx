@@ -7,6 +7,9 @@ import defaultProfileImg from "../assets/images/default-profile-img.png";
 import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
+import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import CardActions from "@mui/material/CardActions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Card from "@mui/material/Card";
@@ -227,13 +230,13 @@ const CoursePage = () => {
               </CardContent>
               <CardActions>
                 <Button
-                  style={{ marginRight: "10px" }}
-                  variant="contained"
+                  style={{ marginRight: "10px", marginLeft: "10px" }}
+                  variant="outlined"
                   color="primary"
                   component={RouterLink}
                   to="/courses"
                 >
-                  All Courses
+                  <ArrowCircleLeftRoundedIcon /> Courses
                 </Button>
                 <Button
                   variant="contained"
@@ -241,10 +244,10 @@ const CoursePage = () => {
                   startIcon={<FavoriteIcon />}
                   onClick={handleWishlist}
                 >
-                  {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                  {isInWishlist ? "Remove" : "Add"}
                 </Button>
                 <Button variant="contained" color="primary" onClick={checkout}>
-                  Checkout
+                  <AddShoppingCartRoundedIcon /> Checkout
                 </Button>
               </CardActions>
             </Card>
@@ -338,7 +341,7 @@ const CoursePage = () => {
                           component={RouterLink}
                           to={`/courses/${courseId}/chapters/${chapter._id}`}
                         >
-                          Go to Chapter
+                          <PlayCircleIcon /> Play Chapter
                         </Button>
                       </Grid>
                     </CardActions>
