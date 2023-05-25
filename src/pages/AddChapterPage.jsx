@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import addChapterImage from "../assets/images/new-chapter-img.jpeg";
 import appConfig from "../config/app-config.json";
+import FootBar from "../components/FootBar";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -150,6 +151,18 @@ const AddChapterForm = () => {
           </Button>
         </form>
       </Container>
+
+      <Box sx={{
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            '@media (min-width: 600px)': {
+              width: '600px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}}>
+        <FootBar />
+      </Box>
     </>
   );
 };

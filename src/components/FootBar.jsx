@@ -94,7 +94,7 @@ export default function FootBar() {
             { !isLecturer && 
               <BottomNavigationAction
                 component={Link}
-                to="/learn-courses" // To be updated to learn course
+                to="/learn-courses" 
                 label="Learn"
                 value="Learn"
                 icon={<SchoolIcon />}
@@ -109,7 +109,7 @@ export default function FootBar() {
             { isLecturer &&
               <BottomNavigationAction
                 component={Link}
-                to="/add-course" // To be updated to upload course
+                to="/add-course" 
                 label="Upload"
                 value="Upload"
                 icon={<CloudUploadIcon />}

@@ -4,8 +4,9 @@ import VideoPlayer from "../components/VideoPlayer";
 import { useParams, Link } from "react-router-dom";
 import { Button, Container, Spinner } from "react-bootstrap";
 import { FiArrowLeftCircle } from "react-icons/fi";
-import { useSelector } from "react-redux";
 import appConfig from "../config/app-config.json";
+import FootBar from '../components/FootBar';
+import { Box }  from "@mui/material";
 
 const ChapterPage = () => {
   const session = JSON.parse(localStorage.getItem('session'));
@@ -77,6 +78,17 @@ const ChapterPage = () => {
         chapterId={chapterId}
         initialChapterIndex={currentChapterIndex}
       />
+      <Box sx={{
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            '@media (min-width: 600px)': {
+              width: '600px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}}>
+        <FootBar />
+      </Box>
     </Container>
   );
 };

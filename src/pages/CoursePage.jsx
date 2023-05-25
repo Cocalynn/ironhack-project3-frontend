@@ -25,7 +25,8 @@ import Avatar from "@mui/material/Avatar";
 import CardHeader from "@mui/material/CardHeader";
 import EditIcon from "@material-ui/icons/Edit";
 import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
+import FootBar from "../components/FootBar";
+import { Box } from "@mui/system";
 
 const CoursePage = () => {
   const session = JSON.parse(localStorage.getItem('session'));
@@ -405,6 +406,17 @@ const CoursePage = () => {
               </Grid>
             ))}
           </Grid>
+          <Box sx={{
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            '@media (min-width: 600px)': {
+              width: '600px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}}>
+        <FootBar />
+      </Box>
         </>
       )}
     </Grid>

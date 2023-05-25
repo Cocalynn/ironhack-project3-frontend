@@ -7,7 +7,7 @@ import appConfig from "../config/app-config.json";
 import axios from "axios";
 
 const VideoPlayer = ({ courseId, chapters, chapterId, initialChapterIndex = 0 }) => {
-  const session = useSelector((state) => state.session);
+  const session = JSON.parse(localStorage.getItem('session'));
   const [currentChapterIndex, setCurrentChapterIndex] =
     useState(initialChapterIndex);
 
