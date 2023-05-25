@@ -216,16 +216,16 @@ const AddCoursePage = () => {
         </Grid>
       </Box>
       <Box sx={{
-                    width: '100%',
-                    position: 'fixed',
-                    bottom: 0,
-                    '@media (min-width: 600px)': {
-                      width: '600px',
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                    }}}>
-                <FootBar />
-              </Box>
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            '@media (min-width: 600px)': {
+              width: '600px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}}>
+        <FootBar />
+      </Box>
     </Container>
   );
 };

@@ -94,7 +94,7 @@ export default function FootBar() {
             { !isLecturer && 
               <BottomNavigationAction
                 component={Link}
-                to="/learn" // To be updated to learn course
+                to="/learn-courses" // To be updated to learn course
                 label="Learn"
                 value="Learn"
                 icon={<SchoolIcon />}
