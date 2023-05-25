@@ -11,13 +11,40 @@ import { Grid } from '@mui/material'
 import { Card } from '@mui/material'
 import { CardContent } from '@mui/material'
 import { Typography } from '@mui/material'
+import jsPDF from 'jspdf'
+import img from '../assets/images/certificate-background.png'
+import { Button } from '@mui/material'
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import { CircularProgress } from '@mui/material';
 
 
+function CircularProgressWithLabel(props) {
+  return (
+    <Box position="relative" display="inline-flex">
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        top={0}
+        left={0}
+        bottom={0}
+        right={0}
+        position="absolute"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography variant="caption" component="div" color="text.secondary">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
 function LearnPage() {
 
     const session = JSON.parse(localStorage.getItem('session'));
     const [registeredCourses, setRegisteredCourses] = useState([]);
+    const [nickname, setNickname] = useState('');
 
     const config = {
         headers: {
@@ -25,7 +52,16 @@ function LearnPage() {
         },
     };
 
+    // Get current user nickname
+    axios.get(`${appConfig.apiUri}/user`, config)
+    .then((response) => {
+      setNickname(response.data.nickname)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
 
+    // get all registered courses
     useEffect(() => {
         axios.get(`${appConfig.apiUri}/user/registered-courses`, config)
         .then((response) => {
@@ -36,6 +72,26 @@ function LearnPage() {
             console.log(error);
         });
     }, []); 
+
+    const generateCertificate = (nickname, finishedCourse) => {
+      // Create a new jsPDF instance
+      const doc = new jsPDF();
+    
+      // Add background image
+      doc.addImage(img, 'PNG', 0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight());
+    
+      // Add recipient name
+      doc.setFontSize(36);
+      doc.setFont('helvetica'); // Change the font family and style
+      doc.text(nickname, 105, 160, { align: 'center' }); // get the nick name from mongoDB database
+    
+      // Add course name
+      doc.setFontSize(20);
+      doc.text(finishedCourse, 105, 195, { align: 'center' }); // get the course name from mongoDB database
+    
+      // Save the PDF
+      doc.save('certificate.pdf');
+    };
 
     return (
         <div>
@@ -49,31 +105,42 @@ function LearnPage() {
           <Grid container spacing={3}>
             {registeredCourses.map((course) => (
               <Grid item key={course._id} xs={12} sm={6} md={4}>
-                <Card>
-                  <CardContent>
-                    <Link
-                      component={RouterLink}
-                      to={`/courses/${course.course._id}`}
-                      variant="body2"
+              <Card>
+                <CardContent>
+                  <Link
+                    component={RouterLink}
+                    to={`/courses/${course.course._id}`}
+                    variant="body2"
+                  >
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      fontWeight="bold"
                     >
-                      <Typography
-                        variant="h6"
-                        component="div"
-                        fontWeight="bold"
-                      >
-                        {course.course.name}
-                      </Typography>
-                    </Link>
-                    <Typography variant="body2" color="text.secondary">
-                      {course.course.description}
+                      {course.course.name}
                     </Typography>
-                  </CardContent>
-                  <Box sx={{ p: 2, textAlign: "center" }}>
-                    <Typography variant="body2" color="text.secondary">
-                      {course.course.price}€
-                    </Typography>
-                  </Box>
-                </Card>
+                  </Link>
+                  <Typography variant="body2" color="text.secondary">
+                    {course.course.description}
+                  </Typography>
+                </CardContent>
+
+                <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
+                  <CircularProgressWithLabel value={course.progress} color="primary" />
+
+                  <Button 
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    startIcon={<WorkspacePremiumIcon />}
+                    onClick={() => generateCertificate(nickname, course.course.name)}
+                    disabled={course.progress !== 100}
+                  >
+                    GET CERTIFICATE
+                  </Button>
+                </Box>
+              </Card>
+
               </Grid>
             ))}
           </Grid>

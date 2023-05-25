@@ -11,8 +11,6 @@ import Paper from '@mui/material/Paper';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import appConfig from '../config/app-config.json';
-import { useSelector } from "react-redux";
-import { setSession } from '../actions/session';
 import { useEffect } from 'react';
 
 
