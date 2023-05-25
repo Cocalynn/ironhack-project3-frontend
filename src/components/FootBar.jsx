@@ -109,7 +109,7 @@ export default function FootBar() {
             { isLecturer &&
               <BottomNavigationAction
                 component={Link}
-                to="/" // To be updated to upload course
+                to="/add-course" // To be updated to upload course
                 label="Upload"
                 value="Upload"
                 icon={<CloudUploadIcon />}
