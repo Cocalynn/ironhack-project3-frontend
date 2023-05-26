@@ -21,12 +21,11 @@ function WishlistCourseCard(props) {
             <Typography variant="subtitle2" color="text.secondary">
               By <strong>{props.lecturer}</strong>
             </Typography>
-
           </Box>
         </CardContent>
         <Box display="flex" alignItems="center">
-            <Typography variant="subtitle2" color="text.primary">
-              ${props.price}
+            <Typography variant="subtitle2" color="text.primary" mr={3}>
+              {props.price}€
             </Typography>
         </Box>
       </Box>

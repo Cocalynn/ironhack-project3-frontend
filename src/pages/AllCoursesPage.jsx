@@ -141,7 +141,7 @@ const AllCoursesPage = () => {
                   </CardContent>
                   <Box sx={{ p: 2, textAlign: "center" }}>
                     <Typography variant="body2" color="text.secondary">
-                      {course.price}€
+                      {course.price} €
                     </Typography>
                   </Box>
                 </Card>
