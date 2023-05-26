@@ -20,11 +20,10 @@ import {
 } from "@mui/material";
 import { Alert } from "@mui/material";
 import formHeader from "../assets/images/form-header.png";
-import FootBar from '../components/FootBar';
-
+import FootBar from "../components/FootBar";
 
 const AddCoursePage = () => {
-  const session = JSON.parse(localStorage.getItem('session'));
+  const session = JSON.parse(localStorage.getItem("session"));
 
   const config = {
     headers: {
@@ -32,8 +31,10 @@ const AddCoursePage = () => {
     },
   };
 
+  console.log("this is the data for the session: ", session);
+
   const redirect = useHistory();
-  const [lecturers, setLecturers] = useState([]);
+  const [lecturer, setLecturer] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [course, setCourse] = useState({
     name: "",
@@ -52,27 +53,32 @@ const AddCoursePage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCourse((prevCourse) => ({
-      ...prevCourse,
-      [name]: value,
-    }));
+    if (name !== "lecturer") {
+      setCourse((prevCourse) => ({
+        ...prevCourse,
+        [name]: value,
+      }));
+    }
   };
 
+  // Frontend Code
   useEffect(() => {
-    const fetchLecturers = async () => {
+    const fetchLecturer = async () => {
       try {
         const response = await axios.get(
-          `${appConfig.apiUri}/api/lecturers`,
+          `${appConfig.apiUri}/lecturer/${session.user.username}`,
           config
         );
-        setLecturers(response.data);
+        setLecturer(response.data);
       } catch (error) {
-        console.error("Error fetching lecturers", error);
+        console.error("Error fetching current user as lecturer", error);
       }
     };
 
-    fetchLecturers();
+    fetchLecturer();
   }, []);
+
+  console.log("this is the data inside lecturer: ", lecturer);
 
   if (showAlert) {
     setShowAlert(false);
@@ -81,9 +87,10 @@ const AddCoursePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const courseWithLecturerId = { ...course, lecturer: lecturer._id }; // Set lecturer to lecturer's _id
       const response = await axios.post(
         `${appConfig.apiUri}/api/courses`,
-        course,
+        courseWithLecturerId,
         config
       );
       console.log(response.data);
@@ -193,11 +200,7 @@ const AddCoursePage = () => {
                       value={course.lecturer}
                       onChange={handleChange}
                     >
-                      {lecturers.map((lecturer) => (
-                        <MenuItem value={lecturer._id} key={lecturer._id}>
-                          {lecturer.name}
-                        </MenuItem>
-                      ))}
+                      <MenuItem value={lecturer._id}>{lecturer.name}</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -215,15 +218,18 @@ const AddCoursePage = () => {
           </Grid>
         </Grid>
       </Box>
-      <Box sx={{
-            width: '100%',
-            position: 'fixed',
-            bottom: 0,
-            '@media (min-width: 600px)': {
-              width: '600px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-            }}}>
+      <Box
+        sx={{
+          width: "100%",
+          position: "fixed",
+          bottom: 0,
+          "@media (min-width: 600px)": {
+            width: "600px",
+            left: "50%",
+            transform: "translateX(-50%)",
+          },
+        }}
+      >
         <FootBar />
       </Box>
     </Container>

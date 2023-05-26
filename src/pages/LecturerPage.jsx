@@ -3,7 +3,6 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import appConfig from "../config/app-config.json";
-import { useSelector } from "react-redux";
 
 const LecturerPage = () => {
   const session = JSON.parse(localStorage.getItem('session'));
