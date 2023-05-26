@@ -364,14 +364,16 @@ const CoursePage = () => {
                 <Card
                   style={{
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "left",
                     marginTop: "20px",
                     marginRight: "20px",
                     marginLeft: "40px",
                     marginBottom: "20px",
                   }}
                 >
-                  <CardContent>
+                  <CardContent style={{
+                    width: "100%",
+                  }}>
                     <Typography gutterBottom variant="h5" component="div">
                       Chapter {index + 1}: {chapter.name}
                     </Typography>
