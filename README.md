@@ -3,7 +3,32 @@
 
 ## Description
 
-Brainbounce is an online learning platform that democratizes education by making it accessible to everyone, everywhere, much like Udemy. It offers a wide variety of courses across diverse fields such as technology, business, arts, language, and personal development. Designed for self-paced learning, Brainbounce hosts expert-led courses that range from beginner to advanced levels. With Brainbounce, you can learn at your own rhythm, track your progress, and engage with instructors and peers. Whether you're seeking professional development or personal enrichment, Brainbounce provides the tools and resources you need to achieve your learning goals. 
+Brainbounce is an online learning platform that democratizes education by making it accessible to everyone, everywhere, much like Udemy. It offers a wide variety of courses across diverse fields such as technology, business, arts, language, and personal development. Designed for self-paced learning, Brainbounce hosts expert-led courses that range from beginner to advanced levels. With Brainbounce, you can learn at your own rhythm, track your progress, and engage with instructors and peers. Whether you're seeking professional development or personal enrichment, Brainbounce provides the tools and resources you need to achieve your learning goals.
+
+## Getting Started
+Clone the repository to your local machine and run npm install to install all the dependencies mentioned in the package.json file.
+
+```bash
+git clone <repository_url>
+cd ironhack-project3-frontend
+npm install
+```
+
+## Running the Application
+Use the following commands to run the application:
+
+- To start the application:
+```bash
+npm start
+```
+- To build the application:
+```bash
+npm run build
+```
+- To test the application:
+```bash
+npm run test
+```
 
 ## MVP (DOM)
 
@@ -95,8 +120,28 @@ Frontend Deployment: [https://friendly-hare-pea-coat.cyclic.app/](https://main--
 
 ### Slides
 URls for the project presentation (slides)
+https://docs.google.com/presentation/d/1XV2WaztX_9gsycxm_wHe87VRQRBks2DWD_q77r7Mun4/edit#slide=id.g24b3049221b_0_10
 
 
 
-### Library resource: 
 
+### Main Dependencies: 
+
+Here are some of the key dependencies used in Brainbounce:
+
+- React for building the user interface.
+- AWS SDK, Amazon Cognito Auth JS and Amazon Cognito Identity JS for AWS services.
+- Axios for promise-based HTTP client for the browser and node.js.
+- Redux and Redux Thunk for state management.
+- React Router Dom for routing.
+- React Bootstrap and Material UI for UI components.
+- jsPDF for generating PDF files.
+- React Player for playing a variety of URLs including file paths, YouTube, Facebook, Twitch, SoundCloud, Streamable, Vimeo, Wistia, Mixcloud, and DailyMotion.
+- Emotion for CSS-in-JS styling.
+
+
+### Contact: 
+
+If you have any questions, feel free to open an issue in this repository.
+
+Enjoy using Brainbounce!
