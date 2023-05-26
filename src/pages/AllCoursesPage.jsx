@@ -28,7 +28,11 @@ const AllCoursesPage = () => {
 
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLecturer, setIsLecturer] = useState(false);
+  const lecturers = ["DiogoBarros", "DanielCalvente", "JaimeLaureano"] 
 
+
+  // Get all courses
   const getAllCourses = () => {
     setIsLoading(true);
     axios
@@ -46,6 +50,17 @@ const AllCoursesPage = () => {
   useEffect(() => {
     getAllCourses();
   }, []);
+
+  // get current user and check if he is a lecturer
+  axios.get(`${appConfig.apiUri}/user`, config)
+  .then((response) => {
+    if (lecturers.includes(response.data.username)) {
+      setIsLecturer(true);
+    }
+  })
+  .catch((error) => {
+    console.log(error)
+  })
 
   if (isLoading) {
     return (
@@ -74,9 +89,29 @@ const AllCoursesPage = () => {
     >
       <Box>
         <CourseSearch setCourses={setCourses} />
-        <Button component={RouterLink} to="/add-course" variant="contained">
-          Add New Course
-        </Button>
+        {isLecturer && (
+          <Box 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="center"
+          >
+            <Button 
+              component={RouterLink} 
+              to="/add-course" 
+              variant="contained" 
+              sx={{ 
+                mb: 2,
+                '&:hover': {
+                  color: 'white',
+                  transform: 'scale(1.05)', 
+                  transition: 'transform 0.3s ease-in-out'
+                }
+              }}
+            >
+              Add New Course
+            </Button>
+          </Box>
+        )}
         {courses.length === 0 ? (
           <Typography variant="h5" component="div">
             No courses found

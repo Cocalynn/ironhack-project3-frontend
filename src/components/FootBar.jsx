@@ -17,8 +17,6 @@ import { useEffect } from 'react';
 
 export default function FootBar() {
 
-  //const session = JSON.parse(localStorage.getItem('session'));
-
   const session = JSON.parse(localStorage.getItem('session'));
 
 
