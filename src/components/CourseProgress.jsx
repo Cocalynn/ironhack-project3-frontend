@@ -11,7 +11,7 @@ const CourseProgress = ({ totalChapters, watchedChapters }) => {
   return (
     <div style={{ margin: "20px" }}>
       <h2>Course Progress</h2>
-      <ProgressBar now={progress} label={`${progress.toFixed(1)}%`} />
+      <ProgressBar now={progress} label={`${progress.toFixed(1)}%`} animated />
     </div>
   );
 };
