@@ -9,7 +9,7 @@ Brainbounce is an online learning platform that democratizes education by making
 Clone the repository to your local machine and run npm install to install all the dependencies mentioned in the package.json file.
 
 ```bash
-git clone <repository_url>
+git clone https://github.com/Cocalynn/ironhack-project3-frontend.git
 cd ironhack-project3-frontend
 npm install
 ```
@@ -121,7 +121,6 @@ Frontend Deployment: [https://friendly-hare-pea-coat.cyclic.app/](https://main--
 ### Slides
 URls for the project presentation (slides)
 https://docs.google.com/presentation/d/1XV2WaztX_9gsycxm_wHe87VRQRBks2DWD_q77r7Mun4/edit#slide=id.g24b3049221b_0_10
-
 
 
 
