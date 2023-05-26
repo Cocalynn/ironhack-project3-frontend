@@ -6,7 +6,6 @@ import Reviews from "../components/Reviews";
 import defaultProfileImg from "../assets/images/default-profile-img.png";
 import defaultCourseImg from "../assets/images/course-default-image.webp";
 import { useParams, Link as RouterLink } from "react-router-dom";
-import LinearProgress from "@material-ui/core/LinearProgress";
 import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
 import ArrowCircleLeftRoundedIcon from "@mui/icons-material/ArrowCircleLeftRounded";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
