@@ -61,12 +61,14 @@ const AddCoursePage = () => {
     }
   };
 
+  console.log("this is the code session:", session);
+
   // Frontend Code
   useEffect(() => {
     const fetchLecturer = async () => {
       try {
         const response = await axios.get(
-          `${appConfig.apiUri}/lecturer/${session.user.username}`,
+          `${appConfig.apiUri}/api/lecturer/${session.user.userName}`,
           config
         );
         setLecturer(response.data);
