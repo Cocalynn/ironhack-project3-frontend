@@ -110,7 +110,7 @@ class Home extends Component {
         })
 
       // get lecturer information
-      axios.get(`${appConfig.apiUri}/lecturer`, config)
+      axios.get(`${appConfig.apiUri}/api/lecturer`, config)
         .then((response) => {
           console.log(response.data)
           this.setState({ currentLecturer: response.data })
