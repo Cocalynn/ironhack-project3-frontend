@@ -195,16 +195,13 @@ const AddCoursePage = () => {
                   />
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl fullWidth required>
-                    <InputLabel>Lecturer</InputLabel>
-                    <Select
-                      name="lecturer"
-                      value={course.lecturer}
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={lecturer._id}>{lecturer.name}</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <TextField
+                    label="Lecturer"
+                    name="lecturer"
+                    value={lecturer.name}
+                    disabled
+                    fullWidth
+                  />
                 </Grid>
               </Grid>
 
