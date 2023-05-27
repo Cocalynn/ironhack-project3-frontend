@@ -112,11 +112,14 @@ npm run test
 ## Links
 
 ### Git
-URls for the project repo and deploy
 
 Frontend Repo: [https://github.com/Cocalynn/ironhack-project3-frontend](https://github.com/Cocalynn/ironhack-project3-frontend)
 
+Backend Repo: [https://github.com/w1lkns/ironhack-project3-backend](https://github.com/w1lkns/ironhack-project3-backend)
+
 Frontend Deployment: [https://friendly-hare-pea-coat.cyclic.app/](https://main--harmonious-starburst-2c594b.netlify.app/)
+
+Backend Deployment: [https://adorable-bear-coat.cyclic.app](https://adorable-bear-coat.cyclic.app)
 
 ### Slides
 URls for the project presentation (slides)
