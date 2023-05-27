@@ -8,9 +8,7 @@
     "tokenScopes": [
         "openid",
         "email",
-        "profile",
-        "https://adorable-bear-coat.cyclic.app/hello-world.all"                
+        "profile"             
     ],
-
     "apiUri": "https://adorable-bear-coat.cyclic.app"
 }
