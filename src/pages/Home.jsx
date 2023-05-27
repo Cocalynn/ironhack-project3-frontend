@@ -177,7 +177,7 @@ class Home extends Component {
     formData.append('profilePic', this.state.file)
     const config = {
       headers: {
-        "content-type": "multipart/form-data",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${this.props.session.credentials.accessToken}`,
       },
     };
